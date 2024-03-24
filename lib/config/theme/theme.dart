@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 
-const seedColor = Color.fromARGB(255, 109, 168, 223);
+const mobileBackgroundColor = Color.fromRGBO(0, 0, 0, 1);
+const webBackgroundColor = Color.fromRGBO(18, 18, 18, 1);
+const mobileSearchColor = Color.fromRGBO(38, 38, 38, 1);
+const blueColor = Color.fromRGBO(0, 149, 246, 1);
+const kPrimaryColor = Colors.white;
+const kSecondaryColor = Colors.grey;
+const kTextColor = Colors.black;
 
-final kColorScheme = ColorScheme.fromSeed(seedColor: seedColor);
+final kColorScheme = ColorScheme.fromSeed(seedColor: blueColor);
 
 final kDarkColorScheme =
-    ColorScheme.fromSeed(seedColor: seedColor, brightness: Brightness.dark);
+    ColorScheme.fromSeed(seedColor: blueColor, brightness: Brightness.dark);
 
-final loginBackground = kColorScheme.primary.withOpacity(0.6);
-final primaryColor = kColorScheme.primary;
-final feedBackground = kColorScheme.secondaryContainer.withOpacity(0.7);
-
-ThemeData kDarkTheme = ThemeData.dark().copyWith(
+final ThemeData kDarkTheme = ThemeData.dark().copyWith(
     colorScheme: kDarkColorScheme,
-    primaryColor: seedColor,
+    primaryColor: kTextColor,
+    primaryColorDark: kPrimaryColor,
     appBarTheme: AppBarTheme(
         toolbarHeight: 50,
         centerTitle: true,
@@ -26,21 +29,22 @@ ThemeData kDarkTheme = ThemeData.dark().copyWith(
           padding: const EdgeInsets.all(15),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          backgroundColor: seedColor,
+          backgroundColor: blueColor,
           foregroundColor: kDarkColorScheme.onPrimary),
     ),
-    iconTheme: const IconThemeData(color: seedColor));
+    iconTheme: const IconThemeData(color: blueColor));
 
-ThemeData kTheme = ThemeData(
+final ThemeData kTheme = ThemeData(
     colorScheme: kColorScheme,
-    primaryColor: kColorScheme.primary,
+    primaryColor: kPrimaryColor,
+    primaryColorDark: kTextColor,
     brightness: Brightness.light,
     appBarTheme: AppBarTheme(
         toolbarHeight: 50,
         centerTitle: true,
         scrolledUnderElevation: 3,
         surfaceTintColor: kColorScheme.surface,
-        shadowColor: Colors.black),
+        shadowColor: kTextColor),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
           elevation: 0,
@@ -50,4 +54,4 @@ ThemeData kTheme = ThemeData(
           backgroundColor: kColorScheme.primary,
           foregroundColor: kColorScheme.onPrimary),
     ),
-    iconTheme: IconThemeData(color: kColorScheme.primary));
+    iconTheme: const IconThemeData(color: kTextColor));
