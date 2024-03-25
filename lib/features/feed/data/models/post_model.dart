@@ -7,7 +7,7 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:instagram_clone/core/serializers/serializers.dart';
-import 'package:instagram_clone/features/home/domain/entities/post_entity.dart';
+import 'package:instagram_clone/features/feed/domain/entities/post_entity.dart';
 
 part 'post_model.g.dart';
 
@@ -29,7 +29,7 @@ abstract class PostModel
   @override
   String get publishedDate;
   @override
-  BuiltList get likes;
+  BuiltList<String> get likes;
 
   PostModel._();
 
@@ -51,15 +51,7 @@ abstract class PostModel
   static PostEntity fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
 
-    return PostModel((b) => b
-      ..userId = data['userId']
-      ..postId = data['postId']
-      ..username = data['username']
-      ..profileImageUrl = data['profileImageUrl']
-      ..postUrl = data['postUrl']
-      ..description = data['description']
-      ..publishedDate = data['publishedDate']
-      ..likes = ListBuilder(data['likes']));
+    return serializers.deserializeWith(PostModel.serializer, data)!;
   }
 
   static Serializer<PostModel> get serializer => _$postModelSerializer;

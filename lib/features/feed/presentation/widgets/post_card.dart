@@ -3,13 +3,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:instagram_clone/core/repositories/firestore_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
+import 'package:instagram_clone/features/feed/domain/entities/post_entity.dart';
+import 'package:instagram_clone/features/feed/presentation/pages/comments_screen.dart';
 import 'package:instagram_clone/features/feed/presentation/widgets/like_animation.dart';
 import 'package:instagram_clone/features/profile/presentation/riverpod/profile_provider.dart';
 import 'package:intl/intl.dart';
 
 class PostCard extends HookConsumerWidget {
   const PostCard({super.key, required this.postData});
-  final Map<String, dynamic> postData;
+  final PostEntity postData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,7 +35,7 @@ class PostCard extends HookConsumerWidget {
                 CircleAvatar(
                   radius: 16,
                   backgroundImage: NetworkImage(
-                    postData['profileImageUrl'].toString(),
+                    postData.profileImageUrl,
                   ),
                 ),
                 Expanded(
@@ -46,7 +48,7 @@ class PostCard extends HookConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          postData['username'].toString(),
+                          postData.username,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -76,6 +78,10 @@ class PostCard extends HookConsumerWidget {
                                           child: Text(e),
                                         ),
                                         onTap: () {
+                                          sl
+                                              .get<FirestoreRepositories>()
+                                              .deletePost(
+                                                  postId: postData.postId);
                                           // remove the dialog box
                                           Navigator.of(context).pop();
                                         }),
@@ -94,9 +100,9 @@ class PostCard extends HookConsumerWidget {
           GestureDetector(
             onDoubleTap: () {
               sl.get<FirestoreRepositories>().likePost(
-                  postId: postData['postId'],
+                  postId: postData.postId,
                   userId: userData.userId,
-                  likes: postData['likes']);
+                  likes: postData.likes.toList());
               isLikeAnimating.value = true;
             },
             child: Stack(
@@ -106,7 +112,7 @@ class PostCard extends HookConsumerWidget {
                   height: MediaQuery.of(context).size.height * 0.35,
                   width: double.infinity,
                   child: Image.network(
-                    postData['postUrl'].toString(),
+                    postData.postUrl,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -135,10 +141,10 @@ class PostCard extends HookConsumerWidget {
           Row(
             children: <Widget>[
               LikeAnimation(
-                isAnimating: postData['likes'].contains(userData.userId),
+                isAnimating: postData.likes.contains(userData.userId),
                 smallLike: true,
                 child: IconButton(
-                    icon: postData['likes'].contains(userData.userId)
+                    icon: postData.likes.contains(userData.userId)
                         ? const Icon(
                             Icons.favorite,
                             color: Colors.red,
@@ -147,23 +153,22 @@ class PostCard extends HookConsumerWidget {
                             Icons.favorite_border,
                           ),
                     onPressed: () => sl.get<FirestoreRepositories>().likePost(
-                        postId: postData['postId'],
+                        postId: postData.postId,
                         userId: userData.userId,
-                        likes: postData['likes'])),
+                        likes: postData.likes.toList())),
               ),
               IconButton(
-                  icon: const Icon(
-                    Icons.comment_outlined,
+                icon: const Icon(
+                  Icons.comment_outlined,
+                ),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CommentsScreen(
+                      postId: postData.postId,
+                    ),
                   ),
-                  onPressed: () => {}
-                  // Navigator.of(context).push(
-                  //   MaterialPageRoute(
-                  //     builder: (context) => CommentsScreen(
-                  //       postId: postData['postId'].toString(),
-                  //     ),
-                  //   ),
-                  // ),
-                  ),
+                ),
+              ),
               IconButton(
                   icon: const Icon(
                     Icons.send,
@@ -190,7 +195,7 @@ class PostCard extends HookConsumerWidget {
                         .titleSmall!
                         .copyWith(fontWeight: FontWeight.w800),
                     child: Text(
-                      '${postData['likes'].length} likes',
+                      '${postData.likes.length} likes',
                       style: Theme.of(context).textTheme.bodyMedium,
                     )),
                 Container(
@@ -200,45 +205,45 @@ class PostCard extends HookConsumerWidget {
                   ),
                   child: RichText(
                     text: TextSpan(
-                      style: TextStyle(color: Theme.of(context).primaryColor),
+                      style:
+                          TextStyle(color: Theme.of(context).primaryColorDark),
                       children: [
                         TextSpan(
-                          text: postData['username'].toString(),
+                          text: postData.username,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextSpan(
-                          text: ' ${postData['description']}',
+                          text: ' ${postData.description}',
                         ),
                       ],
                     ),
                   ),
                 ),
                 InkWell(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Text(
-                        'View all 12 comments',
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Text(
+                      'View all 12 comments',
+                      style: const TextStyle(
+                        fontSize: 16,
                       ),
                     ),
-                    onTap: () => {}
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (context) => CommentsScreen(
-                    //       postId: widget.snap['postId'].toString(),
-                    //     ),
-                    //   ),
-                    // ),
+                  ),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CommentsScreen(
+                        postId: postData.postId,
+                      ),
                     ),
+                  ),
+                ),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(
                     DateFormat.yMMMd()
-                        .format(DateTime.parse(postData['publishedDate'])),
+                        .format(DateTime.parse(postData.publishedDate)),
                   ),
                 ),
               ],

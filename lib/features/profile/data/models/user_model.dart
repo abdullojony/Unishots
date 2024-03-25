@@ -49,14 +49,7 @@ abstract class UserModel
   static UserEntity fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
 
-    return UserModel((b) => b
-      ..userId = data['userId']
-      ..username = data['username']
-      ..email = data['email']
-      ..photoUrl = data['photoUrl']
-      ..bio = data['bio']
-      ..followers = ListBuilder(data['followers'])
-      ..following = ListBuilder(data['following']));
+    return serializers.deserializeWith(UserModel.serializer, data)!;
   }
 
   static Serializer<UserModel> get serializer => _$userModelSerializer;

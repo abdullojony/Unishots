@@ -5,7 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:instagram_clone/core/repositories/firestore_repositories.dart';
 import 'package:instagram_clone/core/repositories/storage_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
-import 'package:instagram_clone/features/home/data/models/post_model.dart';
+import 'package:instagram_clone/features/feed/data/models/comment_model.dart';
+import 'package:instagram_clone/features/feed/data/models/post_model.dart';
 import 'package:uuid/uuid.dart';
 
 class FirestoreRepositoriesImpl implements FirestoreRepositories {
@@ -45,15 +46,48 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
       required List likes}) async {
     final fireStore = sl.get<FirebaseFirestore>();
     if (likes.contains(userId)) {
-      // if the likes list contains the user uid, we need to remove it
-      fireStore.collection('posts').doc(postId).update({
+      // if the likes list contains the userId, we need to remove it
+      await fireStore.collection('posts').doc(postId).update({
         'likes': FieldValue.arrayRemove([userId])
       });
     } else {
-      // else we need to add uid to the likes array
-      fireStore.collection('posts').doc(postId).update({
+      // else we need to add userId to the likes array
+      await fireStore.collection('posts').doc(postId).update({
         'likes': FieldValue.arrayUnion([userId])
       });
     }
+  }
+
+  @override
+  Future<void> deletePost({required String postId}) async {
+    await sl.get<FirebaseFirestore>().collection('posts').doc(postId).delete();
+  }
+
+  @override
+  Future<void> postComment(
+      {required String postId,
+      required String commentText,
+      required String userId,
+      required String username,
+      required String profileImageUrl}) async {
+    final commentId = Uuid().v1();
+
+    final comment = CommentModel((b) => b
+      ..postId = postId
+      ..userId = userId
+      ..username = username
+      ..profileImageUrl = profileImageUrl
+      ..commentId = commentId
+      ..commentText = commentText
+      ..publishedDate = DateTime.now().toString()
+      ..likes = ListBuilder());
+
+    await sl
+        .get<FirebaseFirestore>()
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(commentId)
+        .set(comment.toMap());
   }
 }

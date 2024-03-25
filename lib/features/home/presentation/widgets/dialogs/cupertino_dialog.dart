@@ -30,7 +30,7 @@ class CupertinoDialog extends StatelessWidget {
             },
             child: const Text('Camera'),
           ),
-          const Divider(),
+          const Divider(thickness: 0.3),
           CupertinoDialogAction(
             onPressed: () async {
               sl

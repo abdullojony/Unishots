@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/features/auth/presentation/widgets/instagram_logo.dart';
+import 'package:instagram_clone/features/feed/data/models/post_model.dart';
 import 'package:instagram_clone/features/feed/presentation/widgets/post_card.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -37,7 +38,7 @@ class FeedScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (ctx, index) => PostCard(
-              postData: snapshot.data!.docs[index].data(),
+              postData: PostModel.fromDocument(snapshot.data!.docs[index]),
             ),
           );
         },

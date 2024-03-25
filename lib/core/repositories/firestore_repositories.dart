@@ -10,4 +10,13 @@ abstract class FirestoreRepositories {
 
   Future<void> likePost(
       {required String postId, required String userId, required List likes});
+
+  Future<void> deletePost({required String postId});
+
+  Future<void> postComment(
+      {required String postId,
+      required String commentText,
+      required String userId,
+      required String username,
+      required String profileImageUrl});
 }
