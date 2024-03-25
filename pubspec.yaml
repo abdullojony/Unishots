@@ -50,6 +50,7 @@ dependencies:
   built_value: ^8.9.1
   built_collection: ^5.1.1
   ionicons: ^0.2.2
+  uuid: ^4.3.3
 
 dev_dependencies:
   flutter_test:

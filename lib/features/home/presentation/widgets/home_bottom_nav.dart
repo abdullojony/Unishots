@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:instagram_clone/features/home/presentation/pages/home_screen.dart';
 import 'package:instagram_clone/features/home/presentation/riverpod/home_provider.dart';
+import 'package:instagram_clone/features/home/presentation/widgets/dialogs/android_dialog.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/dialogs/cupertino_dialog.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
 import 'package:ionicons/ionicons.dart';
@@ -27,7 +28,7 @@ class HomeBottomNav extends ConsumerWidget {
               context: context,
               barrierDismissible: true,
               builder: (_) => const CupertinoDialog())
-          : showDialog(context: context, builder: (_) => Dialog());
+          : showDialog(context: context, builder: (_) => const AndroidDialog());
     }
 
     return CupertinoTabBar(

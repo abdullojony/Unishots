@@ -15,13 +15,13 @@ abstract class UserModel
     implements UserEntity, Built<UserModel, UserModelBuilder> {
   // fields go here
   @override
-  String get email;
-  @override
-  String get uid;
-  @override
-  String get photoUrl;
+  String get userId;
   @override
   String get username;
+  @override
+  String get email;
+  @override
+  String get photoUrl;
   @override
   String get bio;
   @override
@@ -50,10 +50,10 @@ abstract class UserModel
     final data = doc.data() as Map<String, dynamic>;
 
     return UserModel((b) => b
-      ..email = data['email']
+      ..userId = data['userId']
       ..username = data['username']
+      ..email = data['email']
       ..photoUrl = data['photoUrl']
-      ..uid = data['uid']
       ..bio = data['bio']
       ..followers = ListBuilder(data['followers'])
       ..following = ListBuilder(data['following']));

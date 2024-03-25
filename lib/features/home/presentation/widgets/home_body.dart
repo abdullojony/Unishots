@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/offstage_navigator.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
+import 'package:instagram_clone/features/profile/presentation/pages/profile_screen.dart';
 
 class HomeBody extends StatelessWidget {
   const HomeBody(this.navKeys, {super.key});
@@ -26,7 +27,7 @@ class HomeBody extends StatelessWidget {
       OffstageNavigator(
         tabItem: TabItem.profile,
         navKey: navKeys[TabItem.profile],
-        screen: const Placeholder(),
+        screen: const ProfileScreen(),
       ),
     ]);
   }

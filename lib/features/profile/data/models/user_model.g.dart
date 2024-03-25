@@ -18,16 +18,17 @@ class _$UserModelSerializer implements StructuredSerializer<UserModel> {
   Iterable<Object?> serialize(Serializers serializers, UserModel object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object?>[
-      'email',
-      serializers.serialize(object.email,
-          specifiedType: const FullType(String)),
-      'uid',
-      serializers.serialize(object.uid, specifiedType: const FullType(String)),
-      'photoUrl',
-      serializers.serialize(object.photoUrl,
+      'userId',
+      serializers.serialize(object.userId,
           specifiedType: const FullType(String)),
       'username',
       serializers.serialize(object.username,
+          specifiedType: const FullType(String)),
+      'email',
+      serializers.serialize(object.email,
+          specifiedType: const FullType(String)),
+      'photoUrl',
+      serializers.serialize(object.photoUrl,
           specifiedType: const FullType(String)),
       'bio',
       serializers.serialize(object.bio, specifiedType: const FullType(String)),
@@ -55,20 +56,20 @@ class _$UserModelSerializer implements StructuredSerializer<UserModel> {
       iterator.moveNext();
       final Object? value = iterator.current;
       switch (key) {
-        case 'email':
-          result.email = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
-          break;
-        case 'uid':
-          result.uid = serializers.deserialize(value,
-              specifiedType: const FullType(String))! as String;
-          break;
-        case 'photoUrl':
-          result.photoUrl = serializers.deserialize(value,
+        case 'userId':
+          result.userId = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
           break;
         case 'username':
           result.username = serializers.deserialize(value,
+              specifiedType: const FullType(String))! as String;
+          break;
+        case 'email':
+          result.email = serializers.deserialize(value,
+              specifiedType: const FullType(String))! as String;
+          break;
+        case 'photoUrl':
+          result.photoUrl = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
           break;
         case 'bio':
@@ -96,13 +97,13 @@ class _$UserModelSerializer implements StructuredSerializer<UserModel> {
 
 class _$UserModel extends UserModel {
   @override
-  final String email;
-  @override
-  final String uid;
-  @override
-  final String photoUrl;
+  final String userId;
   @override
   final String username;
+  @override
+  final String email;
+  @override
+  final String photoUrl;
   @override
   final String bio;
   @override
@@ -114,18 +115,18 @@ class _$UserModel extends UserModel {
       (new UserModelBuilder()..update(updates))._build();
 
   _$UserModel._(
-      {required this.email,
-      required this.uid,
-      required this.photoUrl,
+      {required this.userId,
       required this.username,
+      required this.email,
+      required this.photoUrl,
       required this.bio,
       required this.followers,
       required this.following})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(email, r'UserModel', 'email');
-    BuiltValueNullFieldError.checkNotNull(uid, r'UserModel', 'uid');
-    BuiltValueNullFieldError.checkNotNull(photoUrl, r'UserModel', 'photoUrl');
+    BuiltValueNullFieldError.checkNotNull(userId, r'UserModel', 'userId');
     BuiltValueNullFieldError.checkNotNull(username, r'UserModel', 'username');
+    BuiltValueNullFieldError.checkNotNull(email, r'UserModel', 'email');
+    BuiltValueNullFieldError.checkNotNull(photoUrl, r'UserModel', 'photoUrl');
     BuiltValueNullFieldError.checkNotNull(bio, r'UserModel', 'bio');
     BuiltValueNullFieldError.checkNotNull(followers, r'UserModel', 'followers');
     BuiltValueNullFieldError.checkNotNull(following, r'UserModel', 'following');
@@ -142,10 +143,10 @@ class _$UserModel extends UserModel {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is UserModel &&
-        email == other.email &&
-        uid == other.uid &&
-        photoUrl == other.photoUrl &&
+        userId == other.userId &&
         username == other.username &&
+        email == other.email &&
+        photoUrl == other.photoUrl &&
         bio == other.bio &&
         followers == other.followers &&
         following == other.following;
@@ -154,10 +155,10 @@ class _$UserModel extends UserModel {
   @override
   int get hashCode {
     var _$hash = 0;
-    _$hash = $jc(_$hash, email.hashCode);
-    _$hash = $jc(_$hash, uid.hashCode);
-    _$hash = $jc(_$hash, photoUrl.hashCode);
+    _$hash = $jc(_$hash, userId.hashCode);
     _$hash = $jc(_$hash, username.hashCode);
+    _$hash = $jc(_$hash, email.hashCode);
+    _$hash = $jc(_$hash, photoUrl.hashCode);
     _$hash = $jc(_$hash, bio.hashCode);
     _$hash = $jc(_$hash, followers.hashCode);
     _$hash = $jc(_$hash, following.hashCode);
@@ -168,10 +169,10 @@ class _$UserModel extends UserModel {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'UserModel')
-          ..add('email', email)
-          ..add('uid', uid)
-          ..add('photoUrl', photoUrl)
+          ..add('userId', userId)
           ..add('username', username)
+          ..add('email', email)
+          ..add('photoUrl', photoUrl)
           ..add('bio', bio)
           ..add('followers', followers)
           ..add('following', following))
@@ -182,21 +183,21 @@ class _$UserModel extends UserModel {
 class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
   _$UserModel? _$v;
 
-  String? _email;
-  String? get email => _$this._email;
-  set email(String? email) => _$this._email = email;
-
-  String? _uid;
-  String? get uid => _$this._uid;
-  set uid(String? uid) => _$this._uid = uid;
-
-  String? _photoUrl;
-  String? get photoUrl => _$this._photoUrl;
-  set photoUrl(String? photoUrl) => _$this._photoUrl = photoUrl;
+  String? _userId;
+  String? get userId => _$this._userId;
+  set userId(String? userId) => _$this._userId = userId;
 
   String? _username;
   String? get username => _$this._username;
   set username(String? username) => _$this._username = username;
+
+  String? _email;
+  String? get email => _$this._email;
+  set email(String? email) => _$this._email = email;
+
+  String? _photoUrl;
+  String? get photoUrl => _$this._photoUrl;
+  set photoUrl(String? photoUrl) => _$this._photoUrl = photoUrl;
 
   String? _bio;
   String? get bio => _$this._bio;
@@ -219,10 +220,10 @@ class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
   UserModelBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _email = $v.email;
-      _uid = $v.uid;
-      _photoUrl = $v.photoUrl;
+      _userId = $v.userId;
       _username = $v.username;
+      _email = $v.email;
+      _photoUrl = $v.photoUrl;
       _bio = $v.bio;
       _followers = $v.followers.toBuilder();
       _following = $v.following.toBuilder();
@@ -250,14 +251,14 @@ class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
     try {
       _$result = _$v ??
           new _$UserModel._(
-              email: BuiltValueNullFieldError.checkNotNull(
-                  email, r'UserModel', 'email'),
-              uid: BuiltValueNullFieldError.checkNotNull(
-                  uid, r'UserModel', 'uid'),
-              photoUrl: BuiltValueNullFieldError.checkNotNull(
-                  photoUrl, r'UserModel', 'photoUrl'),
+              userId: BuiltValueNullFieldError.checkNotNull(
+                  userId, r'UserModel', 'userId'),
               username: BuiltValueNullFieldError.checkNotNull(
                   username, r'UserModel', 'username'),
+              email: BuiltValueNullFieldError.checkNotNull(
+                  email, r'UserModel', 'email'),
+              photoUrl: BuiltValueNullFieldError.checkNotNull(
+                  photoUrl, r'UserModel', 'photoUrl'),
               bio: BuiltValueNullFieldError.checkNotNull(
                   bio, r'UserModel', 'bio'),
               followers: followers.build(),

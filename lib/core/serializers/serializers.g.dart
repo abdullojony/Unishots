@@ -7,7 +7,11 @@ part of 'serializers.dart';
 // **************************************************************************
 
 Serializers _$serializers = (new Serializers().toBuilder()
+      ..add(PostModel.serializer)
       ..add(UserModel.serializer)
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(dynamic)]),
+          () => new ListBuilder<dynamic>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(dynamic)]),
           () => new ListBuilder<dynamic>())
