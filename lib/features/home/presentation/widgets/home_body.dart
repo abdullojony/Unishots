@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/features/feed/presentation/pages/feed_screen.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/offstage_navigator.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
 import 'package:instagram_clone/features/profile/presentation/pages/profile_screen.dart';
@@ -13,7 +14,7 @@ class HomeBody extends StatelessWidget {
       OffstageNavigator(
         tabItem: TabItem.feed,
         navKey: navKeys[TabItem.feed],
-        screen: const Placeholder(),
+        screen: const FeedScreen(),
       ),
       OffstageNavigator(
         tabItem: TabItem.search,

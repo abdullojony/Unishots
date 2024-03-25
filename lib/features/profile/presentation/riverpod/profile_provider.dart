@@ -8,7 +8,20 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'profile_provider.g.dart';
 
 @riverpod
-Future<UserEntity> userData(UserDataRef ref) async {
+class UserNotifier extends _$UserNotifier {
+  @override
+  FutureOr<UserEntity> build() async {
+    return await getUserDetails();
+  }
+
+  Future<void> refreshUser() async {
+    // optional: state = const AsyncLoading();
+    final newUser = await getUserDetails();
+    state = AsyncData(newUser);
+  }
+}
+
+Future<UserEntity> getUserDetails() async {
   final User currentUser = sl.get<FirebaseAuth>().currentUser!;
   final doc = await sl
       .get<FirebaseFirestore>()

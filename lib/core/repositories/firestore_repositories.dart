@@ -7,4 +7,7 @@ abstract class FirestoreRepositories {
       required String profileImageUrl,
       required Uint8List postImage,
       required String description});
+
+  Future<void> likePost(
+      {required String postId, required String userId, required List likes});
 }

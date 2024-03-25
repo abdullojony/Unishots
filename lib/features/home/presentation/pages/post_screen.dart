@@ -16,7 +16,7 @@ class PostScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(userDataProvider);
+    final userData = ref.watch(userNotifierProvider).requireValue;
     final descriptionController = useTextEditingController(text: '');
 
     // hooks to manage loading state
@@ -27,9 +27,9 @@ class PostScreen extends HookConsumerWidget {
       requestPending.value = sl
           .get<FirestoreRepositories>()
           .uploadPost(
-              userId: userData.value!.userId,
-              username: userData.value!.username,
-              profileImageUrl: userData.value!.photoUrl,
+              userId: userData.userId,
+              username: userData.username,
+              profileImageUrl: userData.photoUrl,
               postImage: postImage,
               description: descriptionController.text)
           .then((value) => Navigator.of(context).pop(),
@@ -52,10 +52,9 @@ class PostScreen extends HookConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (userData case AsyncValue(:final value) when value != null)
-              CircleAvatar(
-                backgroundImage: NetworkImage(value.photoUrl),
-              ),
+            CircleAvatar(
+              backgroundImage: NetworkImage(userData.photoUrl),
+            ),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.45,
               child: TextField(

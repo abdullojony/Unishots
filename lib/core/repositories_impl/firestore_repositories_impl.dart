@@ -37,4 +37,23 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
         .doc(postId)
         .set(post.toMap());
   }
+
+  @override
+  Future<void> likePost(
+      {required String postId,
+      required String userId,
+      required List likes}) async {
+    final fireStore = sl.get<FirebaseFirestore>();
+    if (likes.contains(userId)) {
+      // if the likes list contains the user uid, we need to remove it
+      fireStore.collection('posts').doc(postId).update({
+        'likes': FieldValue.arrayRemove([userId])
+      });
+    } else {
+      // else we need to add uid to the likes array
+      fireStore.collection('posts').doc(postId).update({
+        'likes': FieldValue.arrayUnion([userId])
+      });
+    }
+  }
 }
