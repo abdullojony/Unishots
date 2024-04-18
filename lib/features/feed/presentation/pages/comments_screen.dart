@@ -25,6 +25,8 @@ class CommentsScreen extends HookConsumerWidget {
             profileImageUrl: userData.photoUrl,
             commentText: commentController.text,
           );
+
+      commentController.clear();
     }
 
     return Scaffold(
@@ -40,6 +42,7 @@ class CommentsScreen extends HookConsumerWidget {
             .collection('posts')
             .doc(postId)
             .collection('comments')
+            .orderBy('publishedDate', descending: true)
             .snapshots(),
         builder: (context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
@@ -74,6 +77,7 @@ class CommentsScreen extends HookConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 8),
                   child: TextField(
+                    onSubmitted: (value) => postComment(),
                     controller: commentController,
                     decoration: InputDecoration(
                       hintText: 'Comment as ${userData.username}',

@@ -70,7 +70,7 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
       required String userId,
       required String username,
       required String profileImageUrl}) async {
-    final commentId = Uuid().v1();
+    final commentId = const Uuid().v1();
 
     final comment = CommentModel((b) => b
       ..postId = postId

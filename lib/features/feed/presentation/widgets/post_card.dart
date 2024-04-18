@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,6 +17,13 @@ class PostCard extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userData = ref.watch(userNotifierProvider).requireValue;
+    final comments = useState<Future<QuerySnapshot>>(sl
+        .get<FirebaseFirestore>()
+        .collection('posts')
+        .doc(postData.postId)
+        .collection('comments')
+        .get());
+    final cSnapshot = useFuture(comments.value);
     final isLikeAnimating = useState(false);
 
     return Container(
@@ -223,14 +231,21 @@ class PostCard extends HookConsumerWidget {
                 ),
                 InkWell(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Text(
-                      'View all 12 comments',
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: switch (cSnapshot.connectionState) {
+                        ConnectionState.done => Text(
+                            'View all ${cSnapshot.data?.docs.length} comments',
+                            style: const TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        _ => const Text(
+                            'Loading comments...',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          )
+                      }),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => CommentsScreen(
