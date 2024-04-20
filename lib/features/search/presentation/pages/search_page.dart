@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:instagram_clone/core/repositories/core_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/core/widgets/loading_wrapper.dart';
+import 'package:instagram_clone/features/profile/presentation/pages/profile_screen.dart';
 
 class SearchPage extends HookWidget {
   const SearchPage({super.key});
@@ -53,6 +54,9 @@ class SearchPage extends HookWidget {
             ? ListView.builder(
                 itemCount: result.value!.docs.length,
                 itemBuilder: (context, index) => ListTile(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => ProfileScreen(
+                          userId: result.value!.docs[index]['userId']))),
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(
                       result.value!.docs[index]['photoUrl'],

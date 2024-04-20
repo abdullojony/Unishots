@@ -1,7 +1,5 @@
 library comment_model;
 
-import 'dart:convert';
-
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
@@ -35,15 +33,6 @@ abstract class CommentModel
 
   factory CommentModel([Function(CommentModelBuilder b) updates]) =
       _$CommentModel;
-
-  String toJson() {
-    return json
-        .encode(serializers.serializeWith(CommentModel.serializer, this));
-  }
-
-  static CommentModel fromJson(Map<String, dynamic> map) {
-    return serializers.deserializeWith(CommentModel.serializer, map)!;
-  }
 
   Map<String, dynamic> toMap() {
     return serializers.serializeWith(CommentModel.serializer, this)

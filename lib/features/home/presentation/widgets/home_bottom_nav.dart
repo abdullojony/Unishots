@@ -60,8 +60,8 @@ class HomeBottomNav extends ConsumerWidget {
           BottomNavigationBarItem(
               icon: Icon(Icons.add_circle_outline_sharp, size: 35)),
           BottomNavigationBarItem(
-              icon: Icon(Ionicons.heart_outline),
-              activeIcon: Icon(Ionicons.heart)),
+              icon: Icon(Ionicons.chatbubble_ellipses_outline),
+              activeIcon: Icon(Ionicons.chatbubble_ellipses)),
           BottomNavigationBarItem(
               icon: Icon(Ionicons.person_circle_outline),
               activeIcon: Icon(Ionicons.person_circle))

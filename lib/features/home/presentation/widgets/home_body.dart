@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/features/chat/presentation/pages/chat_screen.dart';
 import 'package:instagram_clone/features/feed/presentation/pages/feed_screen.dart';
+import 'package:instagram_clone/features/home/presentation/pages/home_screen.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/offstage_navigator.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
-import 'package:instagram_clone/features/profile/presentation/pages/profile_screen.dart';
+import 'package:instagram_clone/features/profile/presentation/pages/profile_page.dart';
 import 'package:instagram_clone/features/search/presentation/pages/search_screen.dart';
 
 class HomeBody extends StatelessWidget {
@@ -11,6 +13,9 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user =
+        context.dependOnInheritedWidgetOfExactType<HomeFunctions>()!.user;
+
     return Stack(children: <Widget>[
       OffstageNavigator(
         tabItem: TabItem.feed,
@@ -25,11 +30,11 @@ class HomeBody extends StatelessWidget {
       OffstageNavigator(
           tabItem: TabItem.favorites,
           navKey: navKeys[TabItem.favorites],
-          screen: const Placeholder()),
+          screen: const ChatScreen()),
       OffstageNavigator(
         tabItem: TabItem.profile,
         navKey: navKeys[TabItem.profile],
-        screen: const ProfileScreen(),
+        screen: ProfilePage(userData: user),
       ),
     ]);
   }

@@ -1,7 +1,5 @@
 library user_model;
 
-import 'dart:convert';
-
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
@@ -25,25 +23,19 @@ abstract class UserModel
   @override
   String get bio;
   @override
-  BuiltList get followers;
+  BuiltList<String> get posts;
   @override
-  BuiltList get following;
+  BuiltList<String> get followers;
+  @override
+  BuiltList<String> get following;
 
   UserModel._();
 
   factory UserModel([Function(UserModelBuilder b) updates]) = _$UserModel;
 
-  String toJson() {
-    return json.encode(serializers.serializeWith(UserModel.serializer, this));
-  }
-
   Map<String, dynamic> toMap() {
     return serializers.serializeWith(UserModel.serializer, this)
         as Map<String, dynamic>;
-  }
-
-  static UserModel fromJson(Map<String, dynamic> map) {
-    return serializers.deserializeWith(UserModel.serializer, map)!;
   }
 
   static UserEntity fromDocument(DocumentSnapshot doc) {

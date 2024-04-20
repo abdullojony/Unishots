@@ -1,16 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/core/service_locator/injection_container.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:instagram_clone/core/widgets/failed_widget.dart';
+import 'package:instagram_clone/core/widgets/loading_widget.dart';
 import 'package:instagram_clone/features/auth/presentation/widgets/instagram_logo.dart';
 import 'package:instagram_clone/features/feed/data/models/post_model.dart';
+import 'package:instagram_clone/features/feed/presentation/riverpod/feed_provider.dart';
 import 'package:instagram_clone/features/feed/presentation/widgets/post_card.dart';
 import 'package:ionicons/ionicons.dart';
 
-class FeedScreen extends StatelessWidget {
+class FeedScreen extends ConsumerWidget {
   const FeedScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    AsyncValue<QuerySnapshot> posts = ref.watch(postStreamProvider);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -18,7 +23,7 @@ class FeedScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(
-              Ionicons.chatbubble_ellipses_outline,
+              Ionicons.heart_outline,
               size: 28,
               color: Theme.of(context).primaryColorDark,
             ),
@@ -26,23 +31,15 @@ class FeedScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: StreamBuilder(
-        stream: sl.get<FirebaseFirestore>().collection('posts').snapshots(),
-        builder: (context,
-            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (ctx, index) => PostCard(
-              postData: PostModel.fromDocument(snapshot.data!.docs[index]),
-            ),
-          );
-        },
-      ),
+      body: posts.when(
+          data: (value) => ListView.builder(
+                itemCount: value.docs.length,
+                itemBuilder: (ctx, index) => PostCard(
+                  postData: PostModel.fromDocument(value.docs[index]),
+                ),
+              ),
+          loading: () => const LoadingWidget(),
+          error: (error, stack) => FailedWidget(error: error.toString())),
     );
   }
 }

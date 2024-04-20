@@ -32,14 +32,18 @@ class _$UserModelSerializer implements StructuredSerializer<UserModel> {
           specifiedType: const FullType(String)),
       'bio',
       serializers.serialize(object.bio, specifiedType: const FullType(String)),
+      'posts',
+      serializers.serialize(object.posts,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(String)])),
       'followers',
       serializers.serialize(object.followers,
           specifiedType:
-              const FullType(BuiltList, const [const FullType(dynamic)])),
+              const FullType(BuiltList, const [const FullType(String)])),
       'following',
       serializers.serialize(object.following,
           specifiedType:
-              const FullType(BuiltList, const [const FullType(dynamic)])),
+              const FullType(BuiltList, const [const FullType(String)])),
     ];
 
     return result;
@@ -76,16 +80,22 @@ class _$UserModelSerializer implements StructuredSerializer<UserModel> {
           result.bio = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
           break;
+        case 'posts':
+          result.posts.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(String)]))!
+              as BuiltList<Object?>);
+          break;
         case 'followers':
           result.followers.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(dynamic)]))!
+                      BuiltList, const [const FullType(String)]))!
               as BuiltList<Object?>);
           break;
         case 'following':
           result.following.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(dynamic)]))!
+                      BuiltList, const [const FullType(String)]))!
               as BuiltList<Object?>);
           break;
       }
@@ -107,9 +117,11 @@ class _$UserModel extends UserModel {
   @override
   final String bio;
   @override
-  final BuiltList<dynamic> followers;
+  final BuiltList<String> posts;
   @override
-  final BuiltList<dynamic> following;
+  final BuiltList<String> followers;
+  @override
+  final BuiltList<String> following;
 
   factory _$UserModel([void Function(UserModelBuilder)? updates]) =>
       (new UserModelBuilder()..update(updates))._build();
@@ -120,6 +132,7 @@ class _$UserModel extends UserModel {
       required this.email,
       required this.photoUrl,
       required this.bio,
+      required this.posts,
       required this.followers,
       required this.following})
       : super._() {
@@ -128,6 +141,7 @@ class _$UserModel extends UserModel {
     BuiltValueNullFieldError.checkNotNull(email, r'UserModel', 'email');
     BuiltValueNullFieldError.checkNotNull(photoUrl, r'UserModel', 'photoUrl');
     BuiltValueNullFieldError.checkNotNull(bio, r'UserModel', 'bio');
+    BuiltValueNullFieldError.checkNotNull(posts, r'UserModel', 'posts');
     BuiltValueNullFieldError.checkNotNull(followers, r'UserModel', 'followers');
     BuiltValueNullFieldError.checkNotNull(following, r'UserModel', 'following');
   }
@@ -148,6 +162,7 @@ class _$UserModel extends UserModel {
         email == other.email &&
         photoUrl == other.photoUrl &&
         bio == other.bio &&
+        posts == other.posts &&
         followers == other.followers &&
         following == other.following;
   }
@@ -160,6 +175,7 @@ class _$UserModel extends UserModel {
     _$hash = $jc(_$hash, email.hashCode);
     _$hash = $jc(_$hash, photoUrl.hashCode);
     _$hash = $jc(_$hash, bio.hashCode);
+    _$hash = $jc(_$hash, posts.hashCode);
     _$hash = $jc(_$hash, followers.hashCode);
     _$hash = $jc(_$hash, following.hashCode);
     _$hash = $jf(_$hash);
@@ -174,6 +190,7 @@ class _$UserModel extends UserModel {
           ..add('email', email)
           ..add('photoUrl', photoUrl)
           ..add('bio', bio)
+          ..add('posts', posts)
           ..add('followers', followers)
           ..add('following', following))
         .toString();
@@ -203,16 +220,20 @@ class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
   String? get bio => _$this._bio;
   set bio(String? bio) => _$this._bio = bio;
 
-  ListBuilder<dynamic>? _followers;
-  ListBuilder<dynamic> get followers =>
-      _$this._followers ??= new ListBuilder<dynamic>();
-  set followers(ListBuilder<dynamic>? followers) =>
+  ListBuilder<String>? _posts;
+  ListBuilder<String> get posts => _$this._posts ??= new ListBuilder<String>();
+  set posts(ListBuilder<String>? posts) => _$this._posts = posts;
+
+  ListBuilder<String>? _followers;
+  ListBuilder<String> get followers =>
+      _$this._followers ??= new ListBuilder<String>();
+  set followers(ListBuilder<String>? followers) =>
       _$this._followers = followers;
 
-  ListBuilder<dynamic>? _following;
-  ListBuilder<dynamic> get following =>
-      _$this._following ??= new ListBuilder<dynamic>();
-  set following(ListBuilder<dynamic>? following) =>
+  ListBuilder<String>? _following;
+  ListBuilder<String> get following =>
+      _$this._following ??= new ListBuilder<String>();
+  set following(ListBuilder<String>? following) =>
       _$this._following = following;
 
   UserModelBuilder();
@@ -225,6 +246,7 @@ class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
       _email = $v.email;
       _photoUrl = $v.photoUrl;
       _bio = $v.bio;
+      _posts = $v.posts.toBuilder();
       _followers = $v.followers.toBuilder();
       _following = $v.following.toBuilder();
       _$v = null;
@@ -261,11 +283,14 @@ class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
                   photoUrl, r'UserModel', 'photoUrl'),
               bio: BuiltValueNullFieldError.checkNotNull(
                   bio, r'UserModel', 'bio'),
+              posts: posts.build(),
               followers: followers.build(),
               following: following.build());
     } catch (_) {
       late String _$failedField;
       try {
+        _$failedField = 'posts';
+        posts.build();
         _$failedField = 'followers';
         followers.build();
         _$failedField = 'following';

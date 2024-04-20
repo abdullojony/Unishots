@@ -1,30 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:instagram_clone/core/repositories/core_repositories.dart';
-import 'package:instagram_clone/core/service_locator/injection_container.dart';
-import 'package:instagram_clone/core/widgets/loading_wrapper.dart';
+import 'package:instagram_clone/core/widgets/failed_widget.dart';
+import 'package:instagram_clone/core/widgets/loading_widget.dart';
+import 'package:instagram_clone/features/feed/presentation/riverpod/feed_provider.dart';
 import 'package:instagram_clone/features/search/presentation/pages/search_page.dart';
 
-class SearchScreen extends HookWidget {
+class SearchScreen extends ConsumerWidget {
   const SearchScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final posts = useState<QuerySnapshot<Map<String, dynamic>>?>(null);
-
-    // Using Hooks to manage loading state
-    final requestPending = useState<Future<dynamic>?>(sl
-        .get<FirebaseFirestore>()
-        .collection('posts')
-        .orderBy('publishedDate')
-        .get()
-        .then((value) => posts.value = value,
-            onError: (error) => sl
-                .get<CoreRepositories>()
-                .showSnackBar(context, message: error.toString())));
-    final snapshot = useFuture(requestPending.value);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<QuerySnapshot> posts = ref.watch(postStreamProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -36,32 +24,19 @@ class SearchScreen extends HookWidget {
           decoration: const InputDecoration(labelText: 'Search for a user...'),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: () => sl
-            .get<FirebaseFirestore>()
-            .collection('posts')
-            .orderBy('publishedDate')
-            .get()
-            .then((value) => posts.value = value,
-                onError: (error) => sl
-                    .get<CoreRepositories>()
-                    .showSnackBar(context, message: error.toString())),
-        child: LoadingWrapper(
-          isLoading: snapshot.connectionState == ConnectionState.waiting,
-          child: posts.value != null
-              ? MasonryGridView.count(
-                  crossAxisCount: 3,
-                  itemCount: posts.value!.docs.length,
-                  itemBuilder: (context, index) => Image.network(
-                    posts.value!.docs[index]['postUrl'],
-                    fit: BoxFit.cover,
-                  ),
-                  mainAxisSpacing: 2.0,
-                  crossAxisSpacing: 2.0,
-                )
-              : const SizedBox(),
-        ),
-      ),
+      body: posts.when(
+          data: (value) => MasonryGridView.count(
+                crossAxisCount: 3,
+                itemCount: value.docs.length,
+                itemBuilder: (context, index) => Image.network(
+                  value.docs[index]['postUrl'],
+                  fit: BoxFit.cover,
+                ),
+                mainAxisSpacing: 2.0,
+                crossAxisSpacing: 2.0,
+              ),
+          loading: () => const LoadingWidget(),
+          error: (error, stack) => FailedWidget(error: error.toString())),
     );
   }
 }

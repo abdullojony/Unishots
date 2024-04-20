@@ -8,5 +8,6 @@ abstract class PostEntity {
   String get postUrl;
   String get description;
   String get publishedDate;
+  BuiltList<String> get comments;
   BuiltList<String> get likes;
 }

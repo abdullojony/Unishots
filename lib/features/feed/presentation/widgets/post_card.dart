@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,7 +6,7 @@ import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/features/feed/domain/entities/post_entity.dart';
 import 'package:instagram_clone/features/feed/presentation/pages/comments_screen.dart';
 import 'package:instagram_clone/features/feed/presentation/widgets/like_animation.dart';
-import 'package:instagram_clone/features/profile/presentation/riverpod/profile_provider.dart';
+import 'package:instagram_clone/features/home/presentation/pages/home_screen.dart';
 import 'package:intl/intl.dart';
 
 class PostCard extends HookConsumerWidget {
@@ -16,14 +15,10 @@ class PostCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(userNotifierProvider).requireValue;
-    final comments = useState<Future<QuerySnapshot>>(sl
-        .get<FirebaseFirestore>()
-        .collection('posts')
-        .doc(postData.postId)
-        .collection('comments')
-        .get());
-    final cSnapshot = useFuture(comments.value);
+    final userId = context
+        .dependOnInheritedWidgetOfExactType<HomeFunctions>()!
+        .user
+        .userId;
     final isLikeAnimating = useState(false);
 
     return Container(
@@ -89,6 +84,7 @@ class PostCard extends HookConsumerWidget {
                                           sl
                                               .get<FirestoreRepositories>()
                                               .deletePost(
+                                                  userId: userId,
                                                   postId: postData.postId);
                                           // remove the dialog box
                                           Navigator.of(context).pop();
@@ -109,7 +105,7 @@ class PostCard extends HookConsumerWidget {
             onDoubleTap: () {
               sl.get<FirestoreRepositories>().likePost(
                   postId: postData.postId,
-                  userId: userData.userId,
+                  userId: userId,
                   likes: postData.likes.toList());
               isLikeAnimating.value = true;
             },
@@ -149,10 +145,10 @@ class PostCard extends HookConsumerWidget {
           Row(
             children: <Widget>[
               LikeAnimation(
-                isAnimating: postData.likes.contains(userData.userId),
+                isAnimating: postData.likes.contains(userId),
                 smallLike: true,
                 child: IconButton(
-                    icon: postData.likes.contains(userData.userId)
+                    icon: postData.likes.contains(userId)
                         ? const Icon(
                             Icons.favorite,
                             color: Colors.red,
@@ -162,7 +158,7 @@ class PostCard extends HookConsumerWidget {
                           ),
                     onPressed: () => sl.get<FirestoreRepositories>().likePost(
                         postId: postData.postId,
-                        userId: userData.userId,
+                        userId: userId,
                         likes: postData.likes.toList())),
               ),
               IconButton(
@@ -229,31 +225,24 @@ class PostCard extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                InkWell(
-                  child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: switch (cSnapshot.connectionState) {
-                        ConnectionState.done => Text(
-                            'View all ${cSnapshot.data?.docs.length} comments',
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
+                if (postData.comments.isNotEmpty)
+                  InkWell(
+                    child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Text(
+                          'View all ${postData.comments.length} comments',
+                          style: const TextStyle(
+                            fontSize: 16,
                           ),
-                        _ => const Text(
-                            'Loading comments...',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          )
-                      }),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CommentsScreen(
-                        postId: postData.postId,
+                        )),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CommentsScreen(
+                          postId: postData.postId,
+                        ),
                       ),
                     ),
                   ),
-                ),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(

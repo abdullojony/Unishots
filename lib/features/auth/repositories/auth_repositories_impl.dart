@@ -25,12 +25,14 @@ class AuthRepositoriesImpl implements AuthRepositories {
     String photoUrl = await sl.get<StorageRepositories>().uploadImage(
         folderName: 'profilePics', image: profileImage, isPost: false);
 
+    // create user model
     final user = UserModel((b) => b
       ..userId = credentials.user!.uid
       ..username = username
       ..email = email
       ..bio = bio
       ..photoUrl = photoUrl
+      ..posts = ListBuilder()
       ..followers = ListBuilder()
       ..following = ListBuilder());
 
@@ -48,5 +50,10 @@ class AuthRepositoriesImpl implements AuthRepositories {
     await sl
         .get<FirebaseAuth>()
         .signInWithEmailAndPassword(email: email, password: password);
+  }
+
+  @override
+  Future<void> signOut() async {
+    await sl.get<FirebaseAuth>().signOut();
   }
 }

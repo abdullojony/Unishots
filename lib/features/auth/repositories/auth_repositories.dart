@@ -9,4 +9,6 @@ abstract class AuthRepositories {
       required Uint8List profileImage});
 
   Future<void> loginUser({required String email, required String password});
+
+  Future<void> signOut();
 }

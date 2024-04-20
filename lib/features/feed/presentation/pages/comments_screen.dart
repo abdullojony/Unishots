@@ -1,28 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:instagram_clone/core/repositories/firestore_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/features/feed/data/models/comment_model.dart';
 import 'package:instagram_clone/features/feed/presentation/widgets/comment_card.dart';
-import 'package:instagram_clone/features/profile/presentation/riverpod/profile_provider.dart';
+import 'package:instagram_clone/features/home/presentation/pages/home_screen.dart';
 
-class CommentsScreen extends HookConsumerWidget {
+class CommentsScreen extends HookWidget {
   const CommentsScreen({super.key, required this.postId});
   final String postId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(userNotifierProvider).requireValue;
+  Widget build(BuildContext context) {
+    final user =
+        context.dependOnInheritedWidgetOfExactType<HomeFunctions>()!.user;
     final commentController = useTextEditingController(text: '');
 
     void postComment() {
       sl.get<FirestoreRepositories>().postComment(
             postId: postId,
-            userId: userData.userId,
-            username: userData.username,
-            profileImageUrl: userData.photoUrl,
+            userId: user.userId,
+            username: user.username,
+            profileImageUrl: user.photoUrl,
             commentText: commentController.text,
           );
 
@@ -70,7 +70,7 @@ class CommentsScreen extends HookConsumerWidget {
           child: Row(
             children: [
               CircleAvatar(
-                backgroundImage: NetworkImage(userData.photoUrl),
+                backgroundImage: NetworkImage(user.photoUrl),
                 radius: 18,
               ),
               Expanded(
@@ -80,7 +80,7 @@ class CommentsScreen extends HookConsumerWidget {
                     onSubmitted: (value) => postComment(),
                     controller: commentController,
                     decoration: InputDecoration(
-                      hintText: 'Comment as ${userData.username}',
+                      hintText: 'Comment as ${user.username}',
                       border: InputBorder.none,
                     ),
                   ),

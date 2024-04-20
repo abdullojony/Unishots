@@ -1,7 +1,5 @@
 library post_model;
 
-import 'dart:convert';
-
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
@@ -29,19 +27,13 @@ abstract class PostModel
   @override
   String get publishedDate;
   @override
+  BuiltList<String> get comments;
+  @override
   BuiltList<String> get likes;
 
   PostModel._();
 
   factory PostModel([Function(PostModelBuilder b) updates]) = _$PostModel;
-
-  String toJson() {
-    return json.encode(serializers.serializeWith(PostModel.serializer, this));
-  }
-
-  static PostModel fromJson(Map<String, dynamic> map) {
-    return serializers.deserializeWith(PostModel.serializer, map)!;
-  }
 
   Map<String, dynamic> toMap() {
     return serializers.serializeWith(PostModel.serializer, this)

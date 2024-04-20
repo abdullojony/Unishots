@@ -6,6 +6,7 @@ abstract class UserEntity {
   String get email;
   String get photoUrl;
   String get bio;
-  BuiltList get followers;
-  BuiltList get following;
+  BuiltList<String> get posts;
+  BuiltList<String> get followers;
+  BuiltList<String> get following;
 }

@@ -39,6 +39,10 @@ class _$PostModelSerializer implements StructuredSerializer<PostModel> {
       'publishedDate',
       serializers.serialize(object.publishedDate,
           specifiedType: const FullType(String)),
+      'comments',
+      serializers.serialize(object.comments,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(String)])),
       'likes',
       serializers.serialize(object.likes,
           specifiedType:
@@ -87,6 +91,12 @@ class _$PostModelSerializer implements StructuredSerializer<PostModel> {
           result.publishedDate = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
           break;
+        case 'comments':
+          result.comments.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(String)]))!
+              as BuiltList<Object?>);
+          break;
         case 'likes':
           result.likes.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
@@ -116,6 +126,8 @@ class _$PostModel extends PostModel {
   @override
   final String publishedDate;
   @override
+  final BuiltList<String> comments;
+  @override
   final BuiltList<String> likes;
 
   factory _$PostModel([void Function(PostModelBuilder)? updates]) =>
@@ -129,6 +141,7 @@ class _$PostModel extends PostModel {
       required this.postUrl,
       required this.description,
       required this.publishedDate,
+      required this.comments,
       required this.likes})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(userId, r'PostModel', 'userId');
@@ -141,6 +154,7 @@ class _$PostModel extends PostModel {
         description, r'PostModel', 'description');
     BuiltValueNullFieldError.checkNotNull(
         publishedDate, r'PostModel', 'publishedDate');
+    BuiltValueNullFieldError.checkNotNull(comments, r'PostModel', 'comments');
     BuiltValueNullFieldError.checkNotNull(likes, r'PostModel', 'likes');
   }
 
@@ -162,6 +176,7 @@ class _$PostModel extends PostModel {
         postUrl == other.postUrl &&
         description == other.description &&
         publishedDate == other.publishedDate &&
+        comments == other.comments &&
         likes == other.likes;
   }
 
@@ -175,6 +190,7 @@ class _$PostModel extends PostModel {
     _$hash = $jc(_$hash, postUrl.hashCode);
     _$hash = $jc(_$hash, description.hashCode);
     _$hash = $jc(_$hash, publishedDate.hashCode);
+    _$hash = $jc(_$hash, comments.hashCode);
     _$hash = $jc(_$hash, likes.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
@@ -190,6 +206,7 @@ class _$PostModel extends PostModel {
           ..add('postUrl', postUrl)
           ..add('description', description)
           ..add('publishedDate', publishedDate)
+          ..add('comments', comments)
           ..add('likes', likes))
         .toString();
   }
@@ -228,6 +245,11 @@ class PostModelBuilder implements Builder<PostModel, PostModelBuilder> {
   set publishedDate(String? publishedDate) =>
       _$this._publishedDate = publishedDate;
 
+  ListBuilder<String>? _comments;
+  ListBuilder<String> get comments =>
+      _$this._comments ??= new ListBuilder<String>();
+  set comments(ListBuilder<String>? comments) => _$this._comments = comments;
+
   ListBuilder<String>? _likes;
   ListBuilder<String> get likes => _$this._likes ??= new ListBuilder<String>();
   set likes(ListBuilder<String>? likes) => _$this._likes = likes;
@@ -244,6 +266,7 @@ class PostModelBuilder implements Builder<PostModel, PostModelBuilder> {
       _postUrl = $v.postUrl;
       _description = $v.description;
       _publishedDate = $v.publishedDate;
+      _comments = $v.comments.toBuilder();
       _likes = $v.likes.toBuilder();
       _$v = null;
     }
@@ -283,10 +306,13 @@ class PostModelBuilder implements Builder<PostModel, PostModelBuilder> {
                   description, r'PostModel', 'description'),
               publishedDate: BuiltValueNullFieldError.checkNotNull(
                   publishedDate, r'PostModel', 'publishedDate'),
+              comments: comments.build(),
               likes: likes.build());
     } catch (_) {
       late String _$failedField;
       try {
+        _$failedField = 'comments';
+        comments.build();
         _$failedField = 'likes';
         likes.build();
       } catch (e) {
