@@ -6,6 +6,7 @@ import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/features/feed/data/models/comment_model.dart';
 import 'package:instagram_clone/features/feed/presentation/widgets/comment_card.dart';
 import 'package:instagram_clone/features/home/presentation/pages/home_screen.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class CommentsScreen extends HookWidget {
   const CommentsScreen({super.key, required this.postId});
@@ -14,7 +15,7 @@ class CommentsScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final user =
-        context.dependOnInheritedWidgetOfExactType<HomeFunctions>()!.user;
+        context.dependOnInheritedWidgetOfExactType<HomeResources>()!.user;
     final commentController = useTextEditingController(text: '');
 
     void postComment() {
@@ -22,7 +23,7 @@ class CommentsScreen extends HookWidget {
             postId: postId,
             userId: user.userId,
             username: user.username,
-            profileImageUrl: user.photoUrl,
+            profileImageUrl: user.profileImage,
             commentText: commentController.text,
           );
 
@@ -31,10 +32,8 @@ class CommentsScreen extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Comments',
-        ),
-        centerTitle: false,
+        title: const Text('Comments').fontSize(18).fontWeight(FontWeight.bold),
+        centerTitle: true,
       ),
       body: StreamBuilder(
         stream: sl
@@ -70,7 +69,7 @@ class CommentsScreen extends HookWidget {
           child: Row(
             children: [
               CircleAvatar(
-                backgroundImage: NetworkImage(user.photoUrl),
+                backgroundImage: NetworkImage(user.profileImage),
                 radius: 18,
               ),
               Expanded(

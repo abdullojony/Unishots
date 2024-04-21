@@ -8,8 +8,8 @@ import 'package:instagram_clone/core/repositories_impl/core_repositories_impl.da
 import 'package:instagram_clone/core/repositories/storage_repositories.dart';
 import 'package:instagram_clone/core/repositories_impl/firestore_repositories_impl.dart';
 import 'package:instagram_clone/core/repositories_impl/storage_repositories_impl.dart';
-import 'package:instagram_clone/features/auth/repositories/auth_repositories.dart';
-import 'package:instagram_clone/features/auth/repositories/auth_repositories_impl.dart';
+import 'package:instagram_clone/features/auth/data/repositories/auth_repositories.dart';
+import 'package:instagram_clone/features/auth/data/repositories/auth_repositories_impl.dart';
 
 final sl = GetIt.instance;
 
@@ -23,7 +23,7 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<AuthRepositories>(() => AuthRepositoriesImpl());
   sl.registerLazySingleton<CoreRepositories>(() => CoreRepositoriesImpl());
   sl.registerLazySingleton<FirestoreRepositories>(
-      () => FirestoreRepositoriesImpl());
+      () => FirestoreRepositoriesImpl(sl()));
   sl.registerLazySingleton<StorageRepositories>(
       () => StorageRepositoriesImpl());
 }

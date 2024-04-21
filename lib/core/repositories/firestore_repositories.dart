@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:instagram_clone/features/chat/domain/entities/chat_entities.dart';
 import 'package:instagram_clone/features/feed/domain/entities/post_entity.dart';
 
 abstract class FirestoreRepositories {
@@ -21,6 +22,21 @@ abstract class FirestoreRepositories {
       required String userId,
       required String username,
       required String profileImageUrl});
+
+  Future<ChatEntity> createChat({
+    required String userId,
+    required String chatId,
+    required String username,
+    required String profileImageUrl,
+  });
+
+  Future<void> sendMessage({
+    required String senderId,
+    required String receiverId,
+    required String content,
+    required String userImage,
+    required String username,
+  });
 
   Future<void> followUser({required String userId, required String followId});
 }

@@ -4,35 +4,36 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:instagram_clone/core/repositories/core_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/core/widgets/loading_wrapper.dart';
-import 'package:instagram_clone/core/widgets/text_input_field.dart';
-import 'package:instagram_clone/features/auth/repositories/auth_repositories.dart';
-import 'package:instagram_clone/features/auth/presentation/pages/signup_screen.dart';
-import 'package:instagram_clone/features/auth/presentation/widgets/instagram_logo.dart';
-import 'package:instagram_clone/features/auth/presentation/widgets/login_button.dart';
-import 'package:instagram_clone/features/profile/presentation/riverpod/profile_provider.dart';
+import 'package:instagram_clone/features/auth/data/repositories/auth_repositories.dart';
+import 'package:instagram_clone/features/auth/presentation/widgets/login_form.dart';
+import 'package:instagram_clone/features/auth/presentation/widgets/signup_option.dart';
+import 'package:instagram_clone/core/widgets/unishots_logo.dart';
+import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
+import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
 
 class LoginScreen extends HookConsumerWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emailController = useTextEditingController(text: '');
-    final passwordController = useTextEditingController(text: '');
     final requestPending = useState<Future?>(null);
     final snapshot = useFuture(requestPending.value);
 
-    void loginUser() {
-      FocusScope.of(context).unfocus();
+    void loginUser(String email, String password) {
       requestPending.value = sl
           .get<AuthRepositories>()
-          .loginUser(
-            email: emailController.text,
-            password: passwordController.text,
-          )
-          .then((value) => ref.invalidate(currentUserProvider),
-              onError: (error) => sl
-                  .get<CoreRepositories>()
-                  .showSnackBar(context, message: error.toString()));
+          .loginUser(email: email, password: password)
+          .then((value) {
+        ref
+            .read(currentTabNotifierProvider.notifier)
+            .update((state) => TabItem.profile);
+        ref.invalidate(currentUserProvider);
+      }, onError: (error) {
+        String e = error.toString();
+        sl
+            .get<CoreRepositories>()
+            .showSnackBar(context, message: e.substring(e.indexOf(' ') + 1));
+      });
     }
 
     return Scaffold(
@@ -48,52 +49,12 @@ class LoginScreen extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Flexible(flex: 2, child: Container()),
-                // svg image
-                const InstagramLogo(),
+                const UnishotsLogo(height: 60),
                 const SizedBox(height: 64),
-                // email input
-                TextInputField(
-                    textEditingController: emailController,
-                    hintText: 'Enter your email',
-                    textInputType: TextInputType.emailAddress),
-                const SizedBox(height: 24),
-                // psw input
-                TextInputField(
-                    textEditingController: passwordController,
-                    hintText: 'Enter your password',
-                    textInputType: TextInputType.text,
-                    isPass: true),
-                const SizedBox(height: 24),
-                // button
-                LoginButton(text: 'Login', onTap: loginUser),
+                LoginForm(loginUser),
                 const SizedBox(height: 12),
                 Flexible(flex: 2, child: Container()),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: const Text(
-                        'Dont have an account?',
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const SignupScreen())),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: const Text(
-                          ' Signup.',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                const SignupOption(),
               ],
             ),
           ),

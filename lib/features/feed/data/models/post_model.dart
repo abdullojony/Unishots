@@ -41,9 +41,8 @@ abstract class PostModel
   }
 
   static PostEntity fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-
-    return serializers.deserializeWith(PostModel.serializer, data)!;
+    return serializers.deserializeWith(
+        PostModel.serializer, doc.data() as Map<String, dynamic>)!;
   }
 
   static Serializer<PostModel> get serializer => _$postModelSerializer;

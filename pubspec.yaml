@@ -53,6 +53,10 @@ dependencies:
   uuid: ^4.3.3
   intl: ^0.19.0
   flutter_staggered_grid_view: ^0.7.0
+  image: ^4.1.7
+  cached_network_image: ^3.3.1
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.10
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +76,31 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
+flutter_native_splash:
+  web: true
+  android: true
+  ios: true
+
+  color: "#ffffff"
+  color_dark: "#000000"
+  image: assets/splash.png
+  image_dark: assets/splash_dark.png
+
+  android_12:
+    color: "#ffffff"
+    color_dark: "#000000"
+    image: assets/splash.png
+    image_dark: assets/splash_dark.png
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/adaptive_icon.png"
+
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -82,7 +111,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/ic_instagram.svg
+    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

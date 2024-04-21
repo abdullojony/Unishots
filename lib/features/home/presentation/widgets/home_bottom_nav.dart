@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:instagram_clone/features/home/presentation/pages/home_screen.dart';
-import 'package:instagram_clone/features/home/presentation/riverpod/home_provider.dart';
+import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/dialogs/android_dialog.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/dialogs/cupertino_dialog.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
@@ -17,7 +17,7 @@ class HomeBottomNav extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // function to go to first page of the tab
     final goToFirst =
-        context.dependOnInheritedWidgetOfExactType<HomeFunctions>()!.goToFirst;
+        context.dependOnInheritedWidgetOfExactType<HomeResources>()!.goToFirst;
 
     // current tab taken from provider [default: feed]
     final currentTab = ref.watch(currentTabNotifierProvider);

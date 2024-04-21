@@ -1,6 +1,5 @@
 library chat_models;
 
-import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,8 +17,6 @@ abstract class ChatModel
   String get username;
   @override
   String get profileImageUrl;
-  @override
-  BuiltList<MessageEntity> get comments;
 
   ChatModel._();
 
@@ -37,4 +34,41 @@ abstract class ChatModel
   }
 
   static Serializer<ChatModel> get serializer => _$chatModelSerializer;
+}
+
+abstract class MessageModel
+    implements MessageEntity, Built<MessageModel, MessageModelBuilder> {
+  // fields go here
+  @override
+  String get messageId;
+  @override
+  String get senderId;
+  @override
+  String get receiverId;
+  @override
+  String get content;
+  @override
+  String get userImage;
+  @override
+  String get username;
+  @override
+  String get created;
+
+  MessageModel._();
+
+  factory MessageModel([Function(MessageModelBuilder b) updates]) =
+      _$MessageModel;
+
+  Map<String, dynamic> toMap() {
+    return serializers.serializeWith(MessageModel.serializer, this)
+        as Map<String, dynamic>;
+  }
+
+  static MessageEntity fromDocument(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+
+    return serializers.deserializeWith(MessageModel.serializer, data)!;
+  }
+
+  static Serializer<MessageModel> get serializer => _$messageModelSerializer;
 }

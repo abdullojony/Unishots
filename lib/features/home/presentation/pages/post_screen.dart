@@ -6,7 +6,8 @@ import 'package:instagram_clone/core/repositories/core_repositories.dart';
 import 'package:instagram_clone/core/repositories/firestore_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/core/widgets/loading_wrapper.dart';
-import 'package:instagram_clone/features/profile/presentation/riverpod/profile_provider.dart';
+import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
+import 'package:instagram_clone/features/profile/data/riverpod/profile_provider.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -30,11 +31,11 @@ class PostScreen extends HookConsumerWidget {
           .uploadPost(
               userId: userData!.userId,
               username: userData.username,
-              profileImageUrl: userData.photoUrl,
+              profileImageUrl: userData.profileImage,
               postImage: postImage,
               description: descriptionController.text)
           .then((value) {
-        ref.read(userProvider.notifier).addPost(value);
+        ref.read(postCounterProvider.notifier).add();
         Navigator.of(context).pop();
       },
               onError: (error) => sl
@@ -57,7 +58,7 @@ class PostScreen extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(userData!.photoUrl),
+              backgroundImage: NetworkImage(userData!.profileImage),
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.45,

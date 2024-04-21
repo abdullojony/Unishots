@@ -1,8 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:instagram_clone/core/widgets/failed_widget.dart';
 import 'package:instagram_clone/core/widgets/loading_widget.dart';
-import 'package:instagram_clone/features/feed/presentation/riverpod/feed_provider.dart';
+import 'package:instagram_clone/features/feed/data/models/post_model.dart';
+import 'package:instagram_clone/features/profile/data/riverpod/profile_provider.dart';
+import 'package:instagram_clone/features/profile/presentation/pages/post_page.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class UserPosts extends ConsumerWidget {
   const UserPosts(this.userId, {super.key});
@@ -10,31 +14,32 @@ class UserPosts extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final posts = ref.watch(postStreamProvider);
+    final postStream = ref.watch(userPostStreamProvider(userId));
 
-    return posts.when(
-        data: (p) {
-          final userPosts = p.docs.where((e) => e['userId'] == userId);
-
-          return GridView.builder(
-            shrinkWrap: true,
-            itemCount: userPosts.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 1.5,
-              childAspectRatio: 1,
+    return postStream.when(
+        data: (userPosts) => GridView.builder(
+              shrinkWrap: true,
+              itemCount: userPosts.docs.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 2,
+                mainAxisSpacing: 1.5,
+                childAspectRatio: 1,
+              ),
+              itemBuilder: (context, index) {
+                return SizedBox(
+                  child: CachedNetworkImage(
+                    imageUrl: userPosts.docs[index]['postUrl'],
+                    fit: BoxFit.cover,
+                    fadeInDuration: const Duration(milliseconds: 200),
+                    fadeOutDuration: const Duration(milliseconds: 200),
+                  ),
+                ).gestures(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => PostPage(
+                            PostModel.fromDocument(userPosts.docs[index])))));
+              },
             ),
-            itemBuilder: (context, index) {
-              return SizedBox(
-                child: Image(
-                  image: NetworkImage(userPosts.elementAt(index)['postUrl']),
-                  fit: BoxFit.cover,
-                ),
-              );
-            },
-          );
-        },
         loading: () => const LoadingWidget(),
         error: (error, stack) => FailedWidget(error: error.toString()));
   }

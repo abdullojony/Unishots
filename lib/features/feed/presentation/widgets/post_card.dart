@@ -6,8 +6,12 @@ import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/features/feed/domain/entities/post_entity.dart';
 import 'package:instagram_clone/features/feed/presentation/pages/comments_screen.dart';
 import 'package:instagram_clone/features/feed/presentation/widgets/like_animation.dart';
+import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
 import 'package:instagram_clone/features/home/presentation/pages/home_screen.dart';
+import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
+import 'package:instagram_clone/features/profile/presentation/pages/profile_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class PostCard extends HookConsumerWidget {
   const PostCard({super.key, required this.postData});
@@ -15,11 +19,18 @@ class PostCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userId = context
-        .dependOnInheritedWidgetOfExactType<HomeFunctions>()!
-        .user
-        .userId;
+    final user =
+        context.dependOnInheritedWidgetOfExactType<HomeResources>()!.user;
     final isLikeAnimating = useState(false);
+
+    void openProfile() {
+      postData.userId == user.userId
+          ? ref
+              .read(currentTabNotifierProvider.notifier)
+              .update((state) => TabItem.profile)
+          : Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => ProfileScreen(userId: postData.userId)));
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -35,31 +46,29 @@ class PostCard extends HookConsumerWidget {
             ).copyWith(right: 0),
             child: Row(
               children: <Widget>[
-                CircleAvatar(
-                  radius: 16,
-                  backgroundImage: NetworkImage(
-                    postData.profileImageUrl,
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircleAvatar(
+                      radius: 16,
+                      backgroundImage: NetworkImage(
+                        postData.profileImageUrl,
+                      ),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          postData.username,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 8,
+                      ),
+                      child: Text(
+                        postData.username,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
+                  ],
+                ).gestures(onTap: openProfile),
+                const Spacer(),
                 IconButton(
                   onPressed: () {
                     showDialog(
@@ -84,7 +93,7 @@ class PostCard extends HookConsumerWidget {
                                           sl
                                               .get<FirestoreRepositories>()
                                               .deletePost(
-                                                  userId: userId,
+                                                  userId: user.userId,
                                                   postId: postData.postId);
                                           // remove the dialog box
                                           Navigator.of(context).pop();
@@ -105,7 +114,7 @@ class PostCard extends HookConsumerWidget {
             onDoubleTap: () {
               sl.get<FirestoreRepositories>().likePost(
                   postId: postData.postId,
-                  userId: userId,
+                  userId: user.userId,
                   likes: postData.likes.toList());
               isLikeAnimating.value = true;
             },
@@ -145,10 +154,10 @@ class PostCard extends HookConsumerWidget {
           Row(
             children: <Widget>[
               LikeAnimation(
-                isAnimating: postData.likes.contains(userId),
+                isAnimating: postData.likes.contains(user.userId),
                 smallLike: true,
                 child: IconButton(
-                    icon: postData.likes.contains(userId)
+                    icon: postData.likes.contains(user.userId)
                         ? const Icon(
                             Icons.favorite,
                             color: Colors.red,
@@ -158,7 +167,7 @@ class PostCard extends HookConsumerWidget {
                           ),
                     onPressed: () => sl.get<FirestoreRepositories>().likePost(
                         postId: postData.postId,
-                        userId: userId,
+                        userId: user.userId,
                         likes: postData.likes.toList())),
               ),
               IconButton(

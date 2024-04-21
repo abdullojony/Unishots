@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:instagram_clone/features/home/presentation/riverpod/home_provider.dart';
+import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
 
 class OffstageNavigator extends ConsumerWidget {

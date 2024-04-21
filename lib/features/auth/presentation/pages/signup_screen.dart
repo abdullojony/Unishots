@@ -7,22 +7,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/core/repositories/core_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/core/widgets/loading_wrapper.dart';
-import 'package:instagram_clone/core/widgets/text_input_field.dart';
-import 'package:instagram_clone/features/auth/repositories/auth_repositories.dart';
-import 'package:instagram_clone/features/auth/presentation/widgets/instagram_logo.dart';
-import 'package:instagram_clone/features/auth/presentation/widgets/login_button.dart';
-import 'package:instagram_clone/features/profile/presentation/riverpod/profile_provider.dart';
-import 'package:styled_widget/styled_widget.dart';
+import 'package:instagram_clone/features/auth/data/repositories/auth_repositories.dart';
+import 'package:instagram_clone/features/auth/presentation/widgets/login_option.dart';
+import 'package:instagram_clone/features/auth/presentation/widgets/profile_photo.dart';
+import 'package:instagram_clone/features/auth/presentation/widgets/signup_form.dart';
+import 'package:instagram_clone/core/widgets/unishots_logo.dart';
+import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
+import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
 
 class SignupScreen extends HookConsumerWidget {
   const SignupScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emailController = useTextEditingController(text: '');
-    final passwordController = useTextEditingController(text: '');
-    final usernameController = useTextEditingController(text: '');
-    final bioController = useTextEditingController(text: '');
     final profileImage = useState<Uint8List?>(null);
     final requestPending = useState<Future?>(null);
     final snapshot = useFuture(requestPending.value);
@@ -38,27 +35,31 @@ class SignupScreen extends HookConsumerWidget {
       }).catchError((error) => null);
     }
 
-    Future<void> signup() async {
-      FocusScope.of(context).unfocus();
+    Future<void> signup(
+        String email, String password, String username, String bio) async {
       requestPending.value = sl
           .get<AuthRepositories>()
           .signupUser(
-              email: emailController.text,
-              password: passwordController.text,
-              username: usernameController.text,
-              bio: bioController.text,
-              profileImage: profileImage.value!)
-          .then((value) {
-        ref.invalidate(currentUserProvider);
+              email: email,
+              password: password,
+              username: username,
+              bio: bio,
+              profileImage: profileImage.value)
+          .then((user) {
+        ref
+            .read(currentTabNotifierProvider.notifier)
+            .update((state) => TabItem.profile);
+        ref.read(currentUserProvider.notifier).signup(user);
         Navigator.of(context).pop();
-      },
-              onError: (error) => sl
-                  .get<CoreRepositories>()
-                  .showSnackBar(context, message: error.toString()));
+      }, onError: (error) {
+        String e = error.toString();
+        sl
+            .get<CoreRepositories>()
+            .showSnackBar(context, message: e.substring(e.indexOf(' ') + 1));
+      });
     }
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: LoadingWrapper(
         isLoading: snapshot.connectionState == ConnectionState.waiting,
         child: SafeArea(
@@ -74,73 +75,14 @@ class SignupScreen extends HookConsumerWidget {
                     flex: 2,
                     child: Container(),
                   ),
-                  const InstagramLogo(),
+                  const UnishotsLogo(height: 60),
                   const SizedBox(height: 64),
-                  Stack(
-                    children: [
-                      profileImage.value == null
-                          ? const CircleAvatar(
-                              radius: 64,
-                              backgroundImage: NetworkImage(
-                                  'https://i.stack.imgur.com/l60Hf.png'))
-                          : CircleAvatar(
-                              radius: 64,
-                              backgroundImage:
-                                  MemoryImage(profileImage.value!)),
-                      Positioned(
-                        bottom: -10,
-                        left: 80,
-                        child: IconButton(
-                          onPressed: selectImage,
-                          icon: const Icon(Icons.add_a_photo),
-                        ),
-                      )
-                    ],
-                  ),
+                  ProfilePhoto(profileImage.value, selectImage),
                   const SizedBox(height: 24),
-                  TextInputField(
-                    hintText: 'Enter your username',
-                    textInputType: TextInputType.text,
-                    textEditingController: usernameController,
-                  ),
-                  TextInputField(
-                    hintText: 'Enter your email',
-                    textInputType: TextInputType.emailAddress,
-                    textEditingController: emailController,
-                  ).padding(vertical: 24),
-                  TextInputField(
-                    hintText: 'Enter your password',
-                    textInputType: TextInputType.text,
-                    textEditingController: passwordController,
-                    isPass: true,
-                  ),
-                  TextInputField(
-                    hintText: 'Enter your bio',
-                    textInputType: TextInputType.text,
-                    textEditingController: bioController,
-                  ).padding(vertical: 24),
-                  LoginButton(text: 'Sign up', onTap: signup),
+                  SignupForm(signup),
                   const SizedBox(height: 12),
                   Flexible(flex: 2, child: Container()),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: const Text('Already have an account?'),
-                      ),
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: const Text(
-                            ' Login.',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  const LoginOption(),
                 ],
               ),
             ),

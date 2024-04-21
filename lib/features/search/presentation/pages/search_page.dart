@@ -59,7 +59,7 @@ class SearchPage extends HookWidget {
                           userId: result.value!.docs[index]['userId']))),
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(
-                      result.value!.docs[index]['photoUrl'],
+                      result.value!.docs[index]['profileImage'],
                     ),
                     radius: 16,
                   ),

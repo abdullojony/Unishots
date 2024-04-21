@@ -14,7 +14,7 @@ class HomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user =
-        context.dependOnInheritedWidgetOfExactType<HomeFunctions>()!.user;
+        context.dependOnInheritedWidgetOfExactType<HomeResources>()!.user;
 
     return Stack(children: <Widget>[
       OffstageNavigator(
@@ -28,8 +28,8 @@ class HomeBody extends StatelessWidget {
         screen: const SearchScreen(),
       ),
       OffstageNavigator(
-          tabItem: TabItem.favorites,
-          navKey: navKeys[TabItem.favorites],
+          tabItem: TabItem.chats,
+          navKey: navKeys[TabItem.chats],
           screen: const ChatScreen()),
       OffstageNavigator(
         tabItem: TabItem.profile,

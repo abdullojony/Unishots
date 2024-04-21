@@ -9,11 +9,9 @@ part of 'serializers.dart';
 Serializers _$serializers = (new Serializers().toBuilder()
       ..add(ChatModel.serializer)
       ..add(CommentModel.serializer)
+      ..add(MessageModel.serializer)
       ..add(PostModel.serializer)
       ..add(UserModel.serializer)
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(MessageEntity)]),
-          () => new ListBuilder<MessageEntity>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())
