@@ -14,8 +14,9 @@ class CommentsScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        context.dependOnInheritedWidgetOfExactType<HomeResources>()!.user;
+    final user = context
+        .dependOnInheritedWidgetOfExactType<HomeResources>()!
+        .currentUser;
     final commentController = useTextEditingController(text: '');
 
     void postComment() {

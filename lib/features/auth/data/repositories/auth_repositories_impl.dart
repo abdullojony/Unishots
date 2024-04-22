@@ -48,9 +48,9 @@ class AuthRepositoriesImpl implements AuthRepositories {
       ..email = email
       ..bio = bio
       ..profileImage = storageUrl
-      ..posts = ListBuilder()
-      ..followers = ListBuilder()
-      ..following = ListBuilder());
+      ..posts = SetBuilder()
+      ..followers = SetBuilder()
+      ..following = SetBuilder());
 
     // Add userdata to firestore
     await sl

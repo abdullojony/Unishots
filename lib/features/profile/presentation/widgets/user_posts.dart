@@ -9,8 +9,10 @@ import 'package:instagram_clone/features/profile/presentation/pages/post_page.da
 import 'package:styled_widget/styled_widget.dart';
 
 class UserPosts extends ConsumerWidget {
-  const UserPosts(this.userId, {super.key});
+  const UserPosts(
+      {required this.userId, required this.isCurrentUser, super.key});
   final String userId;
+  final bool isCurrentUser;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,12 +30,15 @@ class UserPosts extends ConsumerWidget {
               ),
               itemBuilder: (context, index) {
                 return SizedBox(
-                  child: CachedNetworkImage(
-                    imageUrl: userPosts.docs[index]['postUrl'],
-                    fit: BoxFit.cover,
-                    fadeInDuration: const Duration(milliseconds: 200),
-                    fadeOutDuration: const Duration(milliseconds: 200),
-                  ),
+                  child: isCurrentUser
+                      ? CachedNetworkImage(
+                          imageUrl: userPosts.docs[index]['postUrl'],
+                          fit: BoxFit.cover,
+                          fadeInDuration: const Duration(milliseconds: 200),
+                          fadeOutDuration: const Duration(milliseconds: 200),
+                        )
+                      : Image.network(userPosts.docs[index]['postUrl'],
+                          fit: BoxFit.cover),
                 ).gestures(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => PostPage(

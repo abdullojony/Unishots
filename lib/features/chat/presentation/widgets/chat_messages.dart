@@ -14,8 +14,9 @@ class ChatMessages extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user =
-        context.dependOnInheritedWidgetOfExactType<HomeResources>()!.user;
+    final user = context
+        .dependOnInheritedWidgetOfExactType<HomeResources>()!
+        .currentUser;
     final messageStream =
         ref.watch(MessageStreamProvider(user.userId, chat.chatId));
 

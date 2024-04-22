@@ -4,7 +4,7 @@ import 'package:instagram_clone/features/feed/presentation/pages/feed_screen.dar
 import 'package:instagram_clone/features/home/presentation/pages/home_screen.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/offstage_navigator.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
-import 'package:instagram_clone/features/profile/presentation/pages/profile_page.dart';
+import 'package:instagram_clone/features/profile/presentation/pages/profile_screen.dart';
 import 'package:instagram_clone/features/search/presentation/pages/search_screen.dart';
 
 class HomeBody extends StatelessWidget {
@@ -13,14 +13,16 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        context.dependOnInheritedWidgetOfExactType<HomeResources>()!.user;
+    final currentUserId = context
+        .dependOnInheritedWidgetOfExactType<HomeResources>()!
+        .currentUser
+        .userId;
 
     return Stack(children: <Widget>[
       OffstageNavigator(
         tabItem: TabItem.feed,
         navKey: navKeys[TabItem.feed],
-        screen: const FeedScreen(),
+        screen: FeedScreen(userId: currentUserId),
       ),
       OffstageNavigator(
         tabItem: TabItem.search,
@@ -34,7 +36,7 @@ class HomeBody extends StatelessWidget {
       OffstageNavigator(
         tabItem: TabItem.profile,
         navKey: navKeys[TabItem.profile],
-        screen: ProfilePage(userData: user),
+        screen: ProfileScreen(userId: currentUserId),
       ),
     ]);
   }

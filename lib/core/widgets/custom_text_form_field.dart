@@ -8,12 +8,14 @@ class CustomTextFormField extends HookWidget {
       this.hint,
       this.isRequred = true,
       this.isPassword = false,
+      this.isUsername = false,
       this.onSubmitted,
       super.key});
   final TextEditingController controller;
   final TextInputType inputType;
   final bool isRequred;
   final bool isPassword;
+  final bool isUsername;
   final String? hint;
   final Function(String)? onSubmitted;
 
@@ -33,6 +35,8 @@ class CustomTextFormField extends HookWidget {
           return 'Required field';
         } else if (isPassword && (value == null || value.length < 6)) {
           return 'Password is too short';
+        } else if (isUsername && (value == null || value.length < 3)) {
+          return 'Username is too short';
         }
         return null;
       },

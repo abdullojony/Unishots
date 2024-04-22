@@ -35,15 +35,15 @@ class _$UserModelSerializer implements StructuredSerializer<UserModel> {
       'posts',
       serializers.serialize(object.posts,
           specifiedType:
-              const FullType(BuiltList, const [const FullType(String)])),
+              const FullType(BuiltSet, const [const FullType(String)])),
       'followers',
       serializers.serialize(object.followers,
           specifiedType:
-              const FullType(BuiltList, const [const FullType(String)])),
+              const FullType(BuiltSet, const [const FullType(String)])),
       'following',
       serializers.serialize(object.following,
           specifiedType:
-              const FullType(BuiltList, const [const FullType(String)])),
+              const FullType(BuiltSet, const [const FullType(String)])),
     ];
 
     return result;
@@ -82,21 +82,21 @@ class _$UserModelSerializer implements StructuredSerializer<UserModel> {
           break;
         case 'posts':
           result.posts.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      BuiltList, const [const FullType(String)]))!
-              as BuiltList<Object?>);
+                  specifiedType:
+                      const FullType(BuiltSet, const [const FullType(String)]))!
+              as BuiltSet<Object?>);
           break;
         case 'followers':
           result.followers.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      BuiltList, const [const FullType(String)]))!
-              as BuiltList<Object?>);
+                  specifiedType:
+                      const FullType(BuiltSet, const [const FullType(String)]))!
+              as BuiltSet<Object?>);
           break;
         case 'following':
           result.following.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      BuiltList, const [const FullType(String)]))!
-              as BuiltList<Object?>);
+                  specifiedType:
+                      const FullType(BuiltSet, const [const FullType(String)]))!
+              as BuiltSet<Object?>);
           break;
       }
     }
@@ -117,11 +117,11 @@ class _$UserModel extends UserModel {
   @override
   final String bio;
   @override
-  final BuiltList<String> posts;
+  final BuiltSet<String> posts;
   @override
-  final BuiltList<String> followers;
+  final BuiltSet<String> followers;
   @override
-  final BuiltList<String> following;
+  final BuiltSet<String> following;
 
   factory _$UserModel([void Function(UserModelBuilder)? updates]) =>
       (new UserModelBuilder()..update(updates))._build();
@@ -221,21 +221,19 @@ class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
   String? get bio => _$this._bio;
   set bio(String? bio) => _$this._bio = bio;
 
-  ListBuilder<String>? _posts;
-  ListBuilder<String> get posts => _$this._posts ??= new ListBuilder<String>();
-  set posts(ListBuilder<String>? posts) => _$this._posts = posts;
+  SetBuilder<String>? _posts;
+  SetBuilder<String> get posts => _$this._posts ??= new SetBuilder<String>();
+  set posts(SetBuilder<String>? posts) => _$this._posts = posts;
 
-  ListBuilder<String>? _followers;
-  ListBuilder<String> get followers =>
-      _$this._followers ??= new ListBuilder<String>();
-  set followers(ListBuilder<String>? followers) =>
-      _$this._followers = followers;
+  SetBuilder<String>? _followers;
+  SetBuilder<String> get followers =>
+      _$this._followers ??= new SetBuilder<String>();
+  set followers(SetBuilder<String>? followers) => _$this._followers = followers;
 
-  ListBuilder<String>? _following;
-  ListBuilder<String> get following =>
-      _$this._following ??= new ListBuilder<String>();
-  set following(ListBuilder<String>? following) =>
-      _$this._following = following;
+  SetBuilder<String>? _following;
+  SetBuilder<String> get following =>
+      _$this._following ??= new SetBuilder<String>();
+  set following(SetBuilder<String>? following) => _$this._following = following;
 
   UserModelBuilder();
 

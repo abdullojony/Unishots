@@ -9,7 +9,8 @@ class CoreRepositoriesImpl implements CoreRepositories {
   Future<Uint8List?> pickImage({required ImageSource source}) async {
     final ImagePicker imagePicker = ImagePicker();
 
-    XFile? file = await imagePicker.pickImage(source: source);
+    XFile? file = await imagePicker.pickImage(
+        source: source, imageQuality: 85, maxHeight: 1024, maxWidth: 1024);
 
     return await file?.readAsBytes();
   }

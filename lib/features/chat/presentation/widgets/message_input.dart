@@ -13,8 +13,9 @@ class MessageInput extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user =
-        context.dependOnInheritedWidgetOfExactType<HomeResources>()!.user;
+    final user = context
+        .dependOnInheritedWidgetOfExactType<HomeResources>()!
+        .currentUser;
     final messageController = useTextEditingController(text: '');
     final request = useState<Future?>(null);
     final snapshot = useFuture(request.value);

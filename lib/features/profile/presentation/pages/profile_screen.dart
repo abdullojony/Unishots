@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:instagram_clone/core/widgets/failed_widget.dart';
 import 'package:instagram_clone/core/widgets/loading_widget.dart';
+import 'package:instagram_clone/features/auth/data/models/user_model.dart';
 import 'package:instagram_clone/features/profile/data/riverpod/profile_provider.dart';
 import 'package:instagram_clone/features/profile/presentation/pages/profile_page.dart';
 
@@ -11,12 +12,13 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userData = ref.watch(userDataProvider(userId));
+    final userStream = ref.watch(userStreamProvider(userId));
 
-    return switch (userData) {
-      AsyncData(:final value) => ProfilePage(userData: value),
-      AsyncError(:final error) => FailedWidget(error: error.toString()),
-      _ => const LoadingWidget(),
-    };
+    return userStream.when(
+      data: (user) =>
+          ProfilePage(user: UserModel.fromDocument(user.docs.first)),
+      loading: () => const LoadingWidget(),
+      error: (error, s) => FailedWidget(error: error.toString()),
+    );
   }
 }

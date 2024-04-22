@@ -1,25 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:instagram_clone/core/widgets/failed_widget.dart';
 import 'package:instagram_clone/core/widgets/loading_widget.dart';
 import 'package:instagram_clone/core/widgets/unishots_logo.dart';
-import 'package:instagram_clone/features/feed/data/models/post_model.dart';
-import 'package:instagram_clone/features/feed/data/riverpod/feed_provider.dart';
-import 'package:instagram_clone/features/feed/presentation/widgets/post_card.dart';
-import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
-import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
+import 'package:instagram_clone/features/feed/presentation/widgets/feed_posts.dart';
 import 'package:instagram_clone/features/profile/data/riverpod/profile_provider.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:styled_widget/styled_widget.dart';
 
 class FeedScreen extends ConsumerWidget {
-  const FeedScreen({super.key});
+  const FeedScreen({required this.userId, super.key});
+  final String userId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final follows = ref.watch(followsProvider);
-    AsyncValue<QuerySnapshot> postStream = ref.watch(postStreamProvider);
+    final userStream = ref.watch(userStreamProvider(userId));
 
     return Scaffold(
       appBar: AppBar(
@@ -36,34 +30,11 @@ class FeedScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: postStream.when(
-          data: (posts) {
-            final filteredPosts =
-                posts.docs.where((post) => follows.contains(post['userId']));
-            if (filteredPosts.isEmpty) {
-              return Center(
-                  child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Follow users to see their posts'),
-                  const SizedBox(height: 10),
-                  OutlinedButton(
-                    child: const Text('Explore')
-                        .textColor(Theme.of(context).primaryColorDark),
-                    onPressed: () => ref
-                        .read(currentTabNotifierProvider.notifier)
-                        .update((state) => TabItem.search),
-                  ),
-                ],
-              ));
-            }
-            return ListView.builder(
-              itemCount: filteredPosts.length,
-              itemBuilder: (ctx, index) => PostCard(
-                postData:
-                    PostModel.fromDocument(filteredPosts.elementAt(index)),
-              ),
-            );
+      body: userStream.when(
+          data: (users) {
+            final set = Set<String>.from(users.docs.first['following']);
+            set.add(userId);
+            return FeedPosts(following: set);
           },
           loading: () => const LoadingWidget(),
           error: (error, stack) => FailedWidget(error: error.toString())),

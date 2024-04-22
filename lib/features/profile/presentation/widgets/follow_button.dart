@@ -3,16 +3,16 @@ import 'package:styled_widget/styled_widget.dart';
 
 class FollowButton extends StatelessWidget {
   final Function()? function;
-  final Color backgroundColor;
-  final Color borderColor;
+  final Color? backgroundColor;
+  final Color? borderColor;
   final String text;
-  final Color textColor;
+  final Color? textColor;
   const FollowButton(
       {Key? key,
-      required this.backgroundColor,
-      required this.borderColor,
+      this.backgroundColor,
+      this.borderColor,
       required this.text,
-      required this.textColor,
+      this.textColor,
       this.function})
       : super(key: key);
 
@@ -21,9 +21,9 @@ class FollowButton extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: backgroundColor ?? Theme.of(context).primaryColor,
         border: Border.all(
-          color: borderColor,
+          color: borderColor ?? Colors.grey,
         ),
         borderRadius: BorderRadius.circular(5),
       ),
@@ -33,7 +33,7 @@ class FollowButton extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: textColor,
+          color: textColor ?? Theme.of(context).primaryColorDark,
           fontWeight: FontWeight.bold,
         ),
       ),

@@ -15,15 +15,13 @@ class ChatScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user =
-        context.dependOnInheritedWidgetOfExactType<HomeResources>()!.user;
     final goToFirst =
         context.dependOnInheritedWidgetOfExactType<HomeResources>()!.goToFirst;
     final chatStream = ref.watch(chatStreamProvider);
     final chatNotifier = ref.watch(chatNotifierProvider);
 
     if (chatNotifier != null) {
-      Future(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         goToFirst(TabItem.chats);
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (_) => ChatPage(chatNotifier)));
@@ -34,7 +32,7 @@ class ChatScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: Text(user.username).fontWeight(FontWeight.bold),
+        title: const Text('Chats').fontWeight(FontWeight.bold),
         actions: [const Icon(Icons.add_circle_outline).padding(right: 10)],
       ),
       body: chatStream.when(

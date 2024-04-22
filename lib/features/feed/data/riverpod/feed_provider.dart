@@ -8,3 +8,13 @@ part 'feed_provider.g.dart';
 Stream<QuerySnapshot<Map<String, dynamic>>> postStream(PostStreamRef ref) {
   return sl.get<FirebaseFirestore>().collection('posts').snapshots();
 }
+
+@riverpod
+Stream<QuerySnapshot<Map<String, dynamic>>> feedStream(
+    FeedStreamRef ref, Set<String> following) {
+  return sl
+      .get<FirebaseFirestore>()
+      .collection('posts')
+      .where('userId', whereIn: following)
+      .snapshots();
+}

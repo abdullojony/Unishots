@@ -23,11 +23,11 @@ abstract class UserModel
   @override
   String get bio;
   @override
-  BuiltList<String> get posts;
+  BuiltSet<String> get posts;
   @override
-  BuiltList<String> get followers;
+  BuiltSet<String> get followers;
   @override
-  BuiltList<String> get following;
+  BuiltSet<String> get following;
 
   UserModel._();
 

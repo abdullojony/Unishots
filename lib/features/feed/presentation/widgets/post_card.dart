@@ -14,22 +14,23 @@ import 'package:intl/intl.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class PostCard extends HookConsumerWidget {
-  const PostCard({super.key, required this.postData});
-  final PostEntity postData;
+  const PostCard({super.key, required this.post});
+  final PostEntity post;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user =
-        context.dependOnInheritedWidgetOfExactType<HomeResources>()!.user;
+    final user = context
+        .dependOnInheritedWidgetOfExactType<HomeResources>()!
+        .currentUser;
     final isLikeAnimating = useState(false);
 
     void openProfile() {
-      postData.userId == user.userId
+      post.userId == user.userId
           ? ref
               .read(currentTabNotifierProvider.notifier)
               .update((state) => TabItem.profile)
           : Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => ProfileScreen(userId: postData.userId)));
+              builder: (_) => ProfileScreen(userId: post.userId)));
     }
 
     return Container(
@@ -52,7 +53,7 @@ class PostCard extends HookConsumerWidget {
                     CircleAvatar(
                       radius: 16,
                       backgroundImage: NetworkImage(
-                        postData.profileImageUrl,
+                        post.profileImageUrl,
                       ),
                     ),
                     Padding(
@@ -60,7 +61,7 @@ class PostCard extends HookConsumerWidget {
                         left: 8,
                       ),
                       child: Text(
-                        postData.username,
+                        post.username,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -94,7 +95,7 @@ class PostCard extends HookConsumerWidget {
                                               .get<FirestoreRepositories>()
                                               .deletePost(
                                                   userId: user.userId,
-                                                  postId: postData.postId);
+                                                  postId: post.postId);
                                           // remove the dialog box
                                           Navigator.of(context).pop();
                                         }),
@@ -113,9 +114,9 @@ class PostCard extends HookConsumerWidget {
           GestureDetector(
             onDoubleTap: () {
               sl.get<FirestoreRepositories>().likePost(
-                  postId: postData.postId,
+                  postId: post.postId,
                   userId: user.userId,
-                  likes: postData.likes.toList());
+                  likes: post.likes.toList());
               isLikeAnimating.value = true;
             },
             child: Stack(
@@ -125,7 +126,7 @@ class PostCard extends HookConsumerWidget {
                   height: MediaQuery.of(context).size.height * 0.35,
                   width: double.infinity,
                   child: Image.network(
-                    postData.postUrl,
+                    post.postUrl,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -154,10 +155,10 @@ class PostCard extends HookConsumerWidget {
           Row(
             children: <Widget>[
               LikeAnimation(
-                isAnimating: postData.likes.contains(user.userId),
+                isAnimating: post.likes.contains(user.userId),
                 smallLike: true,
                 child: IconButton(
-                    icon: postData.likes.contains(user.userId)
+                    icon: post.likes.contains(user.userId)
                         ? const Icon(
                             Icons.favorite,
                             color: Colors.red,
@@ -166,9 +167,9 @@ class PostCard extends HookConsumerWidget {
                             Icons.favorite_border,
                           ),
                     onPressed: () => sl.get<FirestoreRepositories>().likePost(
-                        postId: postData.postId,
+                        postId: post.postId,
                         userId: user.userId,
-                        likes: postData.likes.toList())),
+                        likes: post.likes.toList())),
               ),
               IconButton(
                 icon: const Icon(
@@ -177,7 +178,7 @@ class PostCard extends HookConsumerWidget {
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => CommentsScreen(
-                      postId: postData.postId,
+                      postId: post.postId,
                     ),
                   ),
                 ),
@@ -208,7 +209,7 @@ class PostCard extends HookConsumerWidget {
                         .titleSmall!
                         .copyWith(fontWeight: FontWeight.w800),
                     child: Text(
-                      '${postData.likes.length} likes',
+                      '${post.likes.length} likes',
                       style: Theme.of(context).textTheme.bodyMedium,
                     )),
                 Container(
@@ -222,24 +223,24 @@ class PostCard extends HookConsumerWidget {
                           TextStyle(color: Theme.of(context).primaryColorDark),
                       children: [
                         TextSpan(
-                          text: postData.username,
+                          text: post.username,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         TextSpan(
-                          text: ' ${postData.description}',
+                          text: ' ${post.description}',
                         ),
                       ],
                     ),
                   ),
                 ),
-                if (postData.comments.isNotEmpty)
+                if (post.comments.isNotEmpty)
                   InkWell(
                     child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         child: Text(
-                          'View all ${postData.comments.length} comments',
+                          'View all ${post.comments.length} comments',
                           style: const TextStyle(
                             fontSize: 16,
                           ),
@@ -247,7 +248,7 @@ class PostCard extends HookConsumerWidget {
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => CommentsScreen(
-                          postId: postData.postId,
+                          postId: post.postId,
                         ),
                       ),
                     ),
@@ -256,7 +257,7 @@ class PostCard extends HookConsumerWidget {
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(
                     DateFormat.yMMMd()
-                        .format(DateTime.parse(postData.publishedDate)),
+                        .format(DateTime.parse(post.publishedDate)),
                   ),
                 ),
               ],

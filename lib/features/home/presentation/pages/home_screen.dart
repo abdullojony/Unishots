@@ -8,16 +8,15 @@ import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/home_body.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/home_bottom_nav.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
-import 'package:instagram_clone/features/profile/data/riverpod/profile_provider.dart';
 
 // Inherited widget to provide functions to the children
 class HomeResources extends InheritedWidget {
-  final UserEntity user;
+  final UserEntity currentUser;
   final void Function(TabItem tabItem) goToFirst;
 
   const HomeResources(
       {super.key,
-      required this.user,
+      required this.currentUser,
       required this.goToFirst,
       required super.child});
 
@@ -25,7 +24,8 @@ class HomeResources extends InheritedWidget {
       context.dependOnInheritedWidgetOfExactType<HomeResources>()!;
 
   @override
-  bool updateShouldNotify(HomeResources oldWidget) => oldWidget.user != user;
+  bool updateShouldNotify(HomeResources oldWidget) =>
+      oldWidget.currentUser != currentUser;
 }
 
 class HomeScreen extends ConsumerWidget {
@@ -51,17 +51,9 @@ class HomeScreen extends ConsumerWidget {
     return currentUser.when(
         data: (user) {
           if (user != null) {
-            final following = user.following.toSet();
-            following.add(user.userId);
-            Future(() {
-              ref.read(followsProvider.notifier).update((state) => following);
-              ref
-                  .read(postCounterProvider.notifier)
-                  .update((state) => user.posts.length);
-            });
             return HomeResources(
               goToFirst: goToFirst,
-              user: user,
+              currentUser: user,
               child: Scaffold(
                 body: HomeBody(navigatorKeys),
                 bottomNavigationBar: const HomeBottomNav(),

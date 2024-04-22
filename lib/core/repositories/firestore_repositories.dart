@@ -38,5 +38,16 @@ abstract class FirestoreRepositories {
     required String username,
   });
 
-  Future<void> followUser({required String userId, required String followId});
+  Future<void> followUser(
+      {required String userId,
+      required String followId,
+      required bool isFollowing});
+
+  Future<void> updateInfo(
+      {required String userId,
+      required String username,
+      required bool usernameChanged,
+      required String bio,
+      required String profileImageUrl,
+      Uint8List? profileImage});
 }

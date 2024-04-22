@@ -120,23 +120,21 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
 
   @override
   Future<void> followUser(
-      {required String userId, required String followId}) async {
-    final fireStore = firestore;
-    final snapshot = await fireStore.collection('users').doc(userId).get();
-    final List following = snapshot.data()!['following'];
-
-    if (following.contains(followId)) {
-      await fireStore.collection('users').doc(userId).update({
+      {required String userId,
+      required String followId,
+      required bool isFollowing}) async {
+    if (isFollowing) {
+      await firestore.collection('users').doc(userId).update({
         'following': FieldValue.arrayRemove([followId])
       });
-      await fireStore.collection('users').doc(followId).update({
+      await firestore.collection('users').doc(followId).update({
         'followers': FieldValue.arrayRemove([userId])
       });
     } else {
-      await fireStore.collection('users').doc(userId).update({
+      await firestore.collection('users').doc(userId).update({
         'following': FieldValue.arrayUnion([followId])
       });
-      await fireStore.collection('users').doc(followId).update({
+      await firestore.collection('users').doc(followId).update({
         'followers': FieldValue.arrayUnion([userId])
       });
     }
@@ -208,5 +206,39 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
     });
 
     await receiver.collection('messages').doc(id).set(message.toMap());
+  }
+
+  @override
+  Future<void> updateInfo(
+      {required String userId,
+      required String username,
+      required bool usernameChanged,
+      required String bio,
+      required String profileImageUrl,
+      Uint8List? profileImage}) async {
+    if (usernameChanged) {
+      // check if username exist
+      final duplicates = await sl
+          .get<FirebaseFirestore>()
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .get();
+
+      if (duplicates.docs.isNotEmpty) {
+        throw Exception('Username already exist');
+      }
+    }
+
+    if (profileImage != null) {
+      // upload profileImage to storage
+      profileImageUrl = await sl.get<StorageRepositories>().uploadImage(
+          folderName: 'profilePics', image: profileImage, isPost: false);
+    }
+
+    await firestore.collection('users').doc(userId).update({
+      'username': username,
+      'bio': bio,
+      'profileImage': profileImageUrl,
+    });
   }
 }
