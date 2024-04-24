@@ -5,12 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'search_provider.g.dart';
 
 @riverpod
-Future<List<dynamic>> posts(PostsRef ref) async {
-  final snapshot = await sl
-      .get<FirebaseFirestore>()
-      .collection('posts')
-      .orderBy('publishedDate')
-      .get();
-
-  return snapshot.docs;
+Stream<QuerySnapshot<Map<String, dynamic>>> postStream(PostStreamRef ref) {
+  return sl.get<FirebaseFirestore>().collection('posts').snapshots();
 }

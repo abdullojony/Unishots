@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/features/feed/domain/entities/post_entity.dart';
+import 'package:instagram_clone/features/feed/presentation/widgets/post_card.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class PostPage extends StatelessWidget {
   const PostPage(this.post, {super.key});
@@ -9,13 +11,10 @@ class PostPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Post'),
+        title: const Text('Post').fontSize(18).fontWeight(FontWeight.bold),
         centerTitle: true,
       ),
-      body: Image.network(
-        post.postUrl,
-        fit: BoxFit.cover,
-      ),
+      body: PostCard(post: post),
     );
   }
 }

@@ -25,6 +25,5 @@ class UserPhoto extends StatelessWidget {
         )
       ],
     );
-    ;
   }
 }

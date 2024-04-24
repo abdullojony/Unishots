@@ -42,7 +42,7 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
       ..description = description
       ..publishedDate = DateTime.now().toString()
       ..comments = ListBuilder()
-      ..likes = ListBuilder());
+      ..likes = SetBuilder());
 
     // add post to firestore
     await firestore.collection('posts').doc(postId).set(post.toMap());
@@ -59,7 +59,7 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
   Future<void> likePost(
       {required String postId,
       required String userId,
-      required List likes}) async {
+      required BuiltSet likes}) async {
     if (likes.contains(userId)) {
       // if the likes list contains the userId, we need to remove it
       await firestore.collection('posts').doc(postId).update({

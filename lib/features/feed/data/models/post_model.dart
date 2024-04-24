@@ -29,7 +29,7 @@ abstract class PostModel
   @override
   BuiltList<String> get comments;
   @override
-  BuiltList<String> get likes;
+  BuiltSet<String> get likes;
 
   PostModel._();
 

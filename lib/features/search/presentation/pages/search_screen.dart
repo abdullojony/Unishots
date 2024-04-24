@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:instagram_clone/core/widgets/failed_widget.dart';
 import 'package:instagram_clone/core/widgets/loading_widget.dart';
-import 'package:instagram_clone/features/feed/data/riverpod/feed_provider.dart';
 import 'package:instagram_clone/features/search/presentation/pages/search_page.dart';
+import 'package:instagram_clone/features/search/presentation/riverpod/search_provider.dart';
 
 class SearchScreen extends ConsumerWidget {
   const SearchScreen({super.key});

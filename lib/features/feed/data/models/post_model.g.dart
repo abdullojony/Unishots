@@ -46,7 +46,7 @@ class _$PostModelSerializer implements StructuredSerializer<PostModel> {
       'likes',
       serializers.serialize(object.likes,
           specifiedType:
-              const FullType(BuiltList, const [const FullType(String)])),
+              const FullType(BuiltSet, const [const FullType(String)])),
     ];
 
     return result;
@@ -99,9 +99,9 @@ class _$PostModelSerializer implements StructuredSerializer<PostModel> {
           break;
         case 'likes':
           result.likes.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      BuiltList, const [const FullType(String)]))!
-              as BuiltList<Object?>);
+                  specifiedType:
+                      const FullType(BuiltSet, const [const FullType(String)]))!
+              as BuiltSet<Object?>);
           break;
       }
     }
@@ -128,7 +128,7 @@ class _$PostModel extends PostModel {
   @override
   final BuiltList<String> comments;
   @override
-  final BuiltList<String> likes;
+  final BuiltSet<String> likes;
 
   factory _$PostModel([void Function(PostModelBuilder)? updates]) =>
       (new PostModelBuilder()..update(updates))._build();
@@ -250,9 +250,9 @@ class PostModelBuilder implements Builder<PostModel, PostModelBuilder> {
       _$this._comments ??= new ListBuilder<String>();
   set comments(ListBuilder<String>? comments) => _$this._comments = comments;
 
-  ListBuilder<String>? _likes;
-  ListBuilder<String> get likes => _$this._likes ??= new ListBuilder<String>();
-  set likes(ListBuilder<String>? likes) => _$this._likes = likes;
+  SetBuilder<String>? _likes;
+  SetBuilder<String> get likes => _$this._likes ??= new SetBuilder<String>();
+  set likes(SetBuilder<String>? likes) => _$this._likes = likes;
 
   PostModelBuilder();
 

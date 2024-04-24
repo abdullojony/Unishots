@@ -11,6 +11,7 @@ Stream<QuerySnapshot<Map<String, dynamic>>> userPostStream(
       .get<FirebaseFirestore>()
       .collection('posts')
       .where('userId', isEqualTo: userId)
+      .orderBy('publishedDate', descending: true)
       .snapshots();
 }
 

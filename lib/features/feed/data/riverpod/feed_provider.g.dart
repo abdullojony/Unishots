@@ -6,23 +6,7 @@ part of 'feed_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$postStreamHash() => r'c8308c81fdf1dcf534573312fb841ee00259993c';
-
-/// See also [postStream].
-@ProviderFor(postStream)
-final postStreamProvider =
-    AutoDisposeStreamProvider<QuerySnapshot<Map<String, dynamic>>>.internal(
-  postStream,
-  name: r'postStreamProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$postStreamHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef PostStreamRef
-    = AutoDisposeStreamProviderRef<QuerySnapshot<Map<String, dynamic>>>;
-String _$feedStreamHash() => r'b0e48cb9a25e48719ddbc1b05903fd3c953b7635';
+String _$feedStreamHash() => r'e1327ce5f06eff85fcc2618738b4df2bbb9da060';
 
 /// Copied from Dart SDK
 class _SystemHash {
