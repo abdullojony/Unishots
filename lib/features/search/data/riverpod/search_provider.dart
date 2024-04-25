@@ -5,6 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'search_provider.g.dart';
 
 @riverpod
-Stream<QuerySnapshot<Map<String, dynamic>>> postStream(PostStreamRef ref) {
-  return sl.get<FirebaseFirestore>().collection('posts').snapshots();
+Future<QuerySnapshot<Map<String, dynamic>>> post(PostRef ref) {
+  return sl.get<FirebaseFirestore>().collection('posts').get();
 }

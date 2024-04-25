@@ -21,18 +21,20 @@ class SearchPage extends HookWidget {
 
     // function get's the submitted search text and makes a request to the server
     void doSearch(String searchText) {
-      requestPending.value = sl
-          .get<FirebaseFirestore>()
-          .collection('users')
-          .where(
-            'username',
-            isGreaterThanOrEqualTo: searchController.text,
-          )
-          .get()
-          .then((value) => result.value = value,
-              onError: (error) => sl
-                  .get<CoreRepositories>()
-                  .showSnackBar(context, message: error.toString()));
+      if (searchText.isNotEmpty) {
+        requestPending.value = sl
+            .get<FirebaseFirestore>()
+            .collection('users')
+            .where(
+              'username',
+              isGreaterThanOrEqualTo: searchController.text,
+            )
+            .get()
+            .then((value) => result.value = value,
+                onError: (error) => sl
+                    .get<CoreRepositories>()
+                    .showSnackBar(context, message: error.toString()));
+      }
     }
 
     return Scaffold(
