@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:instagram_clone/core/repositories/core_repositories.dart';
+import 'package:instagram_clone/core/repositories/firestore_repositories.dart';
+import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/features/feed/domain/entities/post_entity.dart';
+import 'package:instagram_clone/features/feed/presentation/pages/edit_post_page.dart';
 import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
 import 'package:instagram_clone/features/profile/presentation/pages/profile_screen.dart';
@@ -13,13 +17,30 @@ class PostHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isCurrentUser = post.userId == currentUserId;
+    final isSaved = post.savedBy.contains(currentUserId);
+
     void openProfile() {
-      post.userId == currentUserId
+      isCurrentUser
           ? ref
               .read(currentTabNotifierProvider.notifier)
               .update((state) => TabItem.profile)
           : Navigator.of(context).push(MaterialPageRoute(
               builder: (_) => ProfileScreen(userId: post.userId)));
+    }
+
+    void savePost(bool saved) {
+      sl
+          .get<FirestoreRepositories>()
+          .savePost(
+              postId: post.postId,
+              userId: currentUserId,
+              postUrl: post.postUrl,
+              isSaved: saved)
+          .then((value) => !saved
+              ? sl.get<CoreRepositories>().showSnackBar(context,
+                  message: 'Post saved', duration: const Duration(seconds: 1))
+              : {});
     }
 
     return Container(
@@ -44,41 +65,24 @@ class PostHeader extends ConsumerWidget {
             ],
           ).gestures(onTap: openProfile),
           const Spacer(),
-          IconButton(
-            onPressed: () {
-              // showDialog(
-              //   useRootNavigator: false,
-              //   context: context,
-              //   builder: (context) {
-              //     return Dialog(
-              //       child: ListView(
-              //           padding: const EdgeInsets.symmetric(vertical: 16),
-              //           shrinkWrap: true,
-              //           children: [
-              //             'Delete',
-              //           ]
-              //               .map(
-              //                 (e) => InkWell(
-              //                     child: Container(
-              //                       padding: const EdgeInsets.symmetric(
-              //                           vertical: 12, horizontal: 16),
-              //                       child: Text(e),
-              //                     ),
-              //                     onTap: () {
-              //                       sl.get<FirestoreRepositories>().deletePost(
-              //                           userId: user.userId,
-              //                           postId: post.postId);
-              //                       // remove the dialog box
-              //                       Navigator.of(context).pop();
-              //                     }),
-              //               )
-              //               .toList()),
-              //     );
-              //   },
-              // );
-            },
-            icon: const Icon(Icons.more_vert),
-          ),
+          PopupMenuButton(
+              icon: const Icon(Icons.more_vert),
+              itemBuilder: (context) => isCurrentUser
+                  ? [
+                      PopupMenuItem<String>(
+                        child: const Text('Edit'),
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) => EditPostPage(post))),
+                      ),
+                    ]
+                  : [
+                      PopupMenuItem<String>(
+                        child:
+                            isSaved ? const Text('Unsave') : const Text('Save'),
+                        onTap: () => savePost(isSaved),
+                      ),
+                    ])
         ],
       ),
     );

@@ -17,7 +17,9 @@ class PostImage extends HookWidget {
     return GestureDetector(
       onDoubleTap: () {
         sl.get<FirestoreRepositories>().likePost(
-            postId: post.postId, userId: currentUserId, likes: post.likes);
+            postId: post.postId,
+            userId: currentUserId,
+            isLiked: post.likes.contains(currentUserId));
         isLikeAnimating.value = true;
       },
       child: Stack(

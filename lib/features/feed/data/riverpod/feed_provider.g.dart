@@ -6,7 +6,7 @@ part of 'feed_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$feedStreamHash() => r'e1327ce5f06eff85fcc2618738b4df2bbb9da060';
+String _$feedStreamHash() => r'7644ba739b65258f57bffea965b04bcdf8ba237a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -35,16 +35,16 @@ const feedStreamProvider = FeedStreamFamily();
 
 /// See also [feedStream].
 class FeedStreamFamily
-    extends Family<AsyncValue<QuerySnapshot<Map<String, dynamic>>>> {
+    extends Family<AsyncValue<QuerySnapshot<Map<String, dynamic>>?>> {
   /// See also [feedStream].
   const FeedStreamFamily();
 
   /// See also [feedStream].
   FeedStreamProvider call(
-    Set<String> following,
+    Set<String> feedSet,
   ) {
     return FeedStreamProvider(
-      following,
+      feedSet,
     );
   }
 
@@ -53,7 +53,7 @@ class FeedStreamFamily
     covariant FeedStreamProvider provider,
   ) {
     return call(
-      provider.following,
+      provider.feedSet,
     );
   }
 
@@ -74,14 +74,14 @@ class FeedStreamFamily
 
 /// See also [feedStream].
 class FeedStreamProvider
-    extends AutoDisposeStreamProvider<QuerySnapshot<Map<String, dynamic>>> {
+    extends AutoDisposeStreamProvider<QuerySnapshot<Map<String, dynamic>>?> {
   /// See also [feedStream].
   FeedStreamProvider(
-    Set<String> following,
+    Set<String> feedSet,
   ) : this._internal(
           (ref) => feedStream(
             ref as FeedStreamRef,
-            following,
+            feedSet,
           ),
           from: feedStreamProvider,
           name: r'feedStreamProvider',
@@ -92,7 +92,7 @@ class FeedStreamProvider
           dependencies: FeedStreamFamily._dependencies,
           allTransitiveDependencies:
               FeedStreamFamily._allTransitiveDependencies,
-          following: following,
+          feedSet: feedSet,
         );
 
   FeedStreamProvider._internal(
@@ -102,14 +102,15 @@ class FeedStreamProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.following,
+    required this.feedSet,
   }) : super.internal();
 
-  final Set<String> following;
+  final Set<String> feedSet;
 
   @override
   Override overrideWith(
-    Stream<QuerySnapshot<Map<String, dynamic>>> Function(FeedStreamRef provider)
+    Stream<QuerySnapshot<Map<String, dynamic>>?> Function(
+            FeedStreamRef provider)
         create,
   ) {
     return ProviderOverride(
@@ -121,7 +122,141 @@ class FeedStreamProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        following: following,
+        feedSet: feedSet,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<QuerySnapshot<Map<String, dynamic>>?>
+      createElement() {
+    return _FeedStreamProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FeedStreamProvider && other.feedSet == feedSet;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, feedSet.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin FeedStreamRef
+    on AutoDisposeStreamProviderRef<QuerySnapshot<Map<String, dynamic>>?> {
+  /// The parameter `feedSet` of this provider.
+  Set<String> get feedSet;
+}
+
+class _FeedStreamProviderElement extends AutoDisposeStreamProviderElement<
+    QuerySnapshot<Map<String, dynamic>>?> with FeedStreamRef {
+  _FeedStreamProviderElement(super.provider);
+
+  @override
+  Set<String> get feedSet => (origin as FeedStreamProvider).feedSet;
+}
+
+String _$commentStreamHash() => r'65180f3efc75669c6616a7f04880858706193b3d';
+
+/// See also [commentStream].
+@ProviderFor(commentStream)
+const commentStreamProvider = CommentStreamFamily();
+
+/// See also [commentStream].
+class CommentStreamFamily
+    extends Family<AsyncValue<QuerySnapshot<Map<String, dynamic>>>> {
+  /// See also [commentStream].
+  const CommentStreamFamily();
+
+  /// See also [commentStream].
+  CommentStreamProvider call(
+    String postId,
+  ) {
+    return CommentStreamProvider(
+      postId,
+    );
+  }
+
+  @override
+  CommentStreamProvider getProviderOverride(
+    covariant CommentStreamProvider provider,
+  ) {
+    return call(
+      provider.postId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'commentStreamProvider';
+}
+
+/// See also [commentStream].
+class CommentStreamProvider
+    extends AutoDisposeStreamProvider<QuerySnapshot<Map<String, dynamic>>> {
+  /// See also [commentStream].
+  CommentStreamProvider(
+    String postId,
+  ) : this._internal(
+          (ref) => commentStream(
+            ref as CommentStreamRef,
+            postId,
+          ),
+          from: commentStreamProvider,
+          name: r'commentStreamProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$commentStreamHash,
+          dependencies: CommentStreamFamily._dependencies,
+          allTransitiveDependencies:
+              CommentStreamFamily._allTransitiveDependencies,
+          postId: postId,
+        );
+
+  CommentStreamProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.postId,
+  }) : super.internal();
+
+  final String postId;
+
+  @override
+  Override overrideWith(
+    Stream<QuerySnapshot<Map<String, dynamic>>> Function(
+            CommentStreamRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: CommentStreamProvider._internal(
+        (ref) => create(ref as CommentStreamRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        postId: postId,
       ),
     );
   }
@@ -129,35 +264,51 @@ class FeedStreamProvider
   @override
   AutoDisposeStreamProviderElement<QuerySnapshot<Map<String, dynamic>>>
       createElement() {
-    return _FeedStreamProviderElement(this);
+    return _CommentStreamProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FeedStreamProvider && other.following == following;
+    return other is CommentStreamProvider && other.postId == postId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, following.hashCode);
+    hash = _SystemHash.combine(hash, postId.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin FeedStreamRef
+mixin CommentStreamRef
     on AutoDisposeStreamProviderRef<QuerySnapshot<Map<String, dynamic>>> {
-  /// The parameter `following` of this provider.
-  Set<String> get following;
+  /// The parameter `postId` of this provider.
+  String get postId;
 }
 
-class _FeedStreamProviderElement extends AutoDisposeStreamProviderElement<
-    QuerySnapshot<Map<String, dynamic>>> with FeedStreamRef {
-  _FeedStreamProviderElement(super.provider);
+class _CommentStreamProviderElement extends AutoDisposeStreamProviderElement<
+    QuerySnapshot<Map<String, dynamic>>> with CommentStreamRef {
+  _CommentStreamProviderElement(super.provider);
 
   @override
-  Set<String> get following => (origin as FeedStreamProvider).following;
+  String get postId => (origin as CommentStreamProvider).postId;
 }
+
+String _$feedSetHash() => r'4b1a140aba08c57ed389a72358e12b95b137cd87';
+
+/// See also [FeedSet].
+@ProviderFor(FeedSet)
+final feedSetProvider =
+    AutoDisposeNotifierProvider<FeedSet, Set<String>>.internal(
+  FeedSet.new,
+  name: r'feedSetProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$feedSetHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$FeedSet = AutoDisposeNotifier<Set<String>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

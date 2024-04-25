@@ -6,7 +6,7 @@ import 'package:instagram_clone/core/repositories/storage_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/features/auth/data/models/user_model.dart';
 import 'package:instagram_clone/features/auth/data/repositories/auth_repositories.dart';
-import 'package:instagram_clone/features/auth/domain/entities/user_entitiy.dart';
+import 'package:instagram_clone/features/auth/domain/entities/user_entity.dart';
 
 class AuthRepositoriesImpl implements AuthRepositories {
   @override
@@ -48,7 +48,8 @@ class AuthRepositoriesImpl implements AuthRepositories {
       ..email = email
       ..bio = bio
       ..profileImage = storageUrl
-      ..posts = SetBuilder()
+      ..posts = ListBuilder()
+      ..savedPosts = ListBuilder()
       ..followers = SetBuilder()
       ..following = SetBuilder());
 

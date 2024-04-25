@@ -16,10 +16,12 @@ class CoreRepositoriesImpl implements CoreRepositories {
   }
 
   @override
-  void showSnackBar(BuildContext context, {required String message}) {
+  void showSnackBar(BuildContext context,
+      {required String message,
+      Duration duration = const Duration(seconds: 2)}) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+      SnackBar(content: Text(message), duration: duration),
     );
   }
 }

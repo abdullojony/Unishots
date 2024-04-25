@@ -15,8 +15,7 @@ class ProfileScreen extends ConsumerWidget {
     final userStream = ref.watch(userStreamProvider(userId));
 
     return userStream.when(
-      data: (user) =>
-          ProfilePage(user: UserModel.fromDocument(user.docs.first)),
+      data: (user) => ProfilePage(user: UserModel.fromDocument(user)),
       loading: () => const LoadingWidget(),
       error: (error, s) => FailedWidget(error: error.toString()),
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/features/auth/domain/entities/user_entitiy.dart';
+import 'package:instagram_clone/features/auth/domain/entities/user_entity.dart';
 import 'package:instagram_clone/features/profile/presentation/pages/profile_screen.dart';
 
 class UserListItem extends StatelessWidget {

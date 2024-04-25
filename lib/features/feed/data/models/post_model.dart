@@ -27,9 +27,11 @@ abstract class PostModel
   @override
   String get publishedDate;
   @override
-  BuiltList<String> get comments;
+  int get comments;
   @override
   BuiltSet<String> get likes;
+  @override
+  BuiltSet<String> get savedBy;
 
   PostModel._();
 

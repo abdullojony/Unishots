@@ -9,17 +9,16 @@ class EditForm extends HookWidget {
   final _formKey = GlobalKey<FormState>();
   final String username;
   final String bio;
-  final Function(String, String) submit;
+  final Function(String) submit;
 
   @override
   Widget build(BuildContext context) {
-    final usernameController = useTextEditingController(text: username);
     final bioController = useTextEditingController(text: bio);
 
     void doSubmit() {
       if (_formKey.currentState!.validate()) {
         FocusScope.of(context).unfocus();
-        submit(usernameController.text, bioController.text);
+        submit(bioController.text);
       }
     }
 
@@ -27,11 +26,6 @@ class EditForm extends HookWidget {
         key: _formKey,
         child: Column(
           children: [
-            CustomTextFormField(
-              hint: 'Enter your username',
-              controller: usernameController,
-              isUsername: true,
-            ),
             CustomTextFormField(
               hint: 'Enter your bio',
               controller: bioController,

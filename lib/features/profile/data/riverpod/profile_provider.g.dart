@@ -6,7 +6,7 @@ part of 'profile_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$userPostStreamHash() => r'8d4d8c1da34d0d4f421f3d0ddad5d4e03bcc7370';
+String _$userStreamHash() => r'd0b802ff43f82a191b22d1b34539234ae86afea1';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,147 +29,13 @@ class _SystemHash {
   }
 }
 
-/// See also [userPostStream].
-@ProviderFor(userPostStream)
-const userPostStreamProvider = UserPostStreamFamily();
-
-/// See also [userPostStream].
-class UserPostStreamFamily
-    extends Family<AsyncValue<QuerySnapshot<Map<String, dynamic>>>> {
-  /// See also [userPostStream].
-  const UserPostStreamFamily();
-
-  /// See also [userPostStream].
-  UserPostStreamProvider call(
-    String userId,
-  ) {
-    return UserPostStreamProvider(
-      userId,
-    );
-  }
-
-  @override
-  UserPostStreamProvider getProviderOverride(
-    covariant UserPostStreamProvider provider,
-  ) {
-    return call(
-      provider.userId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'userPostStreamProvider';
-}
-
-/// See also [userPostStream].
-class UserPostStreamProvider
-    extends AutoDisposeStreamProvider<QuerySnapshot<Map<String, dynamic>>> {
-  /// See also [userPostStream].
-  UserPostStreamProvider(
-    String userId,
-  ) : this._internal(
-          (ref) => userPostStream(
-            ref as UserPostStreamRef,
-            userId,
-          ),
-          from: userPostStreamProvider,
-          name: r'userPostStreamProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$userPostStreamHash,
-          dependencies: UserPostStreamFamily._dependencies,
-          allTransitiveDependencies:
-              UserPostStreamFamily._allTransitiveDependencies,
-          userId: userId,
-        );
-
-  UserPostStreamProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.userId,
-  }) : super.internal();
-
-  final String userId;
-
-  @override
-  Override overrideWith(
-    Stream<QuerySnapshot<Map<String, dynamic>>> Function(
-            UserPostStreamRef provider)
-        create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: UserPostStreamProvider._internal(
-        (ref) => create(ref as UserPostStreamRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        userId: userId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeStreamProviderElement<QuerySnapshot<Map<String, dynamic>>>
-      createElement() {
-    return _UserPostStreamProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is UserPostStreamProvider && other.userId == userId;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, userId.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-mixin UserPostStreamRef
-    on AutoDisposeStreamProviderRef<QuerySnapshot<Map<String, dynamic>>> {
-  /// The parameter `userId` of this provider.
-  String get userId;
-}
-
-class _UserPostStreamProviderElement extends AutoDisposeStreamProviderElement<
-    QuerySnapshot<Map<String, dynamic>>> with UserPostStreamRef {
-  _UserPostStreamProviderElement(super.provider);
-
-  @override
-  String get userId => (origin as UserPostStreamProvider).userId;
-}
-
-String _$userStreamHash() => r'fc77a3f5f7af6c92238d293b615252d202b241af';
-
 /// See also [userStream].
 @ProviderFor(userStream)
 const userStreamProvider = UserStreamFamily();
 
 /// See also [userStream].
 class UserStreamFamily
-    extends Family<AsyncValue<QuerySnapshot<Map<String, dynamic>>>> {
+    extends Family<AsyncValue<DocumentSnapshot<Map<String, dynamic>>>> {
   /// See also [userStream].
   const UserStreamFamily();
 
@@ -208,7 +74,7 @@ class UserStreamFamily
 
 /// See also [userStream].
 class UserStreamProvider
-    extends AutoDisposeStreamProvider<QuerySnapshot<Map<String, dynamic>>> {
+    extends AutoDisposeStreamProvider<DocumentSnapshot<Map<String, dynamic>>> {
   /// See also [userStream].
   UserStreamProvider(
     String userId,
@@ -243,7 +109,8 @@ class UserStreamProvider
 
   @override
   Override overrideWith(
-    Stream<QuerySnapshot<Map<String, dynamic>>> Function(UserStreamRef provider)
+    Stream<DocumentSnapshot<Map<String, dynamic>>> Function(
+            UserStreamRef provider)
         create,
   ) {
     return ProviderOverride(
@@ -261,7 +128,7 @@ class UserStreamProvider
   }
 
   @override
-  AutoDisposeStreamProviderElement<QuerySnapshot<Map<String, dynamic>>>
+  AutoDisposeStreamProviderElement<DocumentSnapshot<Map<String, dynamic>>>
       createElement() {
     return _UserStreamProviderElement(this);
   }
@@ -281,43 +148,43 @@ class UserStreamProvider
 }
 
 mixin UserStreamRef
-    on AutoDisposeStreamProviderRef<QuerySnapshot<Map<String, dynamic>>> {
+    on AutoDisposeStreamProviderRef<DocumentSnapshot<Map<String, dynamic>>> {
   /// The parameter `userId` of this provider.
   String get userId;
 }
 
 class _UserStreamProviderElement extends AutoDisposeStreamProviderElement<
-    QuerySnapshot<Map<String, dynamic>>> with UserStreamRef {
+    DocumentSnapshot<Map<String, dynamic>>> with UserStreamRef {
   _UserStreamProviderElement(super.provider);
 
   @override
   String get userId => (origin as UserStreamProvider).userId;
 }
 
-String _$followerStreamHash() => r'143e331914065adc45da6d34110cf40a41132951';
+String _$followerUsersHash() => r'6693749def8b172ea1d877d53e67f0fb7fd46706';
 
-/// See also [followerStream].
-@ProviderFor(followerStream)
-const followerStreamProvider = FollowerStreamFamily();
+/// See also [followerUsers].
+@ProviderFor(followerUsers)
+const followerUsersProvider = FollowerUsersFamily();
 
-/// See also [followerStream].
-class FollowerStreamFamily
-    extends Family<AsyncValue<QuerySnapshot<Map<String, dynamic>>>> {
-  /// See also [followerStream].
-  const FollowerStreamFamily();
+/// See also [followerUsers].
+class FollowerUsersFamily
+    extends Family<AsyncValue<QuerySnapshot<Map<String, dynamic>>?>> {
+  /// See also [followerUsers].
+  const FollowerUsersFamily();
 
-  /// See also [followerStream].
-  FollowerStreamProvider call(
+  /// See also [followerUsers].
+  FollowerUsersProvider call(
     Set<String> followers,
   ) {
-    return FollowerStreamProvider(
+    return FollowerUsersProvider(
       followers,
     );
   }
 
   @override
-  FollowerStreamProvider getProviderOverride(
-    covariant FollowerStreamProvider provider,
+  FollowerUsersProvider getProviderOverride(
+    covariant FollowerUsersProvider provider,
   ) {
     return call(
       provider.followers,
@@ -336,33 +203,33 @@ class FollowerStreamFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'followerStreamProvider';
+  String? get name => r'followerUsersProvider';
 }
 
-/// See also [followerStream].
-class FollowerStreamProvider
-    extends AutoDisposeStreamProvider<QuerySnapshot<Map<String, dynamic>>> {
-  /// See also [followerStream].
-  FollowerStreamProvider(
+/// See also [followerUsers].
+class FollowerUsersProvider
+    extends AutoDisposeFutureProvider<QuerySnapshot<Map<String, dynamic>>?> {
+  /// See also [followerUsers].
+  FollowerUsersProvider(
     Set<String> followers,
   ) : this._internal(
-          (ref) => followerStream(
-            ref as FollowerStreamRef,
+          (ref) => followerUsers(
+            ref as FollowerUsersRef,
             followers,
           ),
-          from: followerStreamProvider,
-          name: r'followerStreamProvider',
+          from: followerUsersProvider,
+          name: r'followerUsersProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$followerStreamHash,
-          dependencies: FollowerStreamFamily._dependencies,
+                  : _$followerUsersHash,
+          dependencies: FollowerUsersFamily._dependencies,
           allTransitiveDependencies:
-              FollowerStreamFamily._allTransitiveDependencies,
+              FollowerUsersFamily._allTransitiveDependencies,
           followers: followers,
         );
 
-  FollowerStreamProvider._internal(
+  FollowerUsersProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -376,14 +243,14 @@ class FollowerStreamProvider
 
   @override
   Override overrideWith(
-    Stream<QuerySnapshot<Map<String, dynamic>>> Function(
-            FollowerStreamRef provider)
+    FutureOr<QuerySnapshot<Map<String, dynamic>>?> Function(
+            FollowerUsersRef provider)
         create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: FollowerStreamProvider._internal(
-        (ref) => create(ref as FollowerStreamRef),
+      override: FollowerUsersProvider._internal(
+        (ref) => create(ref as FollowerUsersRef),
         from: from,
         name: null,
         dependencies: null,
@@ -395,14 +262,14 @@ class FollowerStreamProvider
   }
 
   @override
-  AutoDisposeStreamProviderElement<QuerySnapshot<Map<String, dynamic>>>
+  AutoDisposeFutureProviderElement<QuerySnapshot<Map<String, dynamic>>?>
       createElement() {
-    return _FollowerStreamProviderElement(this);
+    return _FollowerUsersProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FollowerStreamProvider && other.followers == followers;
+    return other is FollowerUsersProvider && other.followers == followers;
   }
 
   @override
@@ -414,44 +281,44 @@ class FollowerStreamProvider
   }
 }
 
-mixin FollowerStreamRef
-    on AutoDisposeStreamProviderRef<QuerySnapshot<Map<String, dynamic>>> {
+mixin FollowerUsersRef
+    on AutoDisposeFutureProviderRef<QuerySnapshot<Map<String, dynamic>>?> {
   /// The parameter `followers` of this provider.
   Set<String> get followers;
 }
 
-class _FollowerStreamProviderElement extends AutoDisposeStreamProviderElement<
-    QuerySnapshot<Map<String, dynamic>>> with FollowerStreamRef {
-  _FollowerStreamProviderElement(super.provider);
+class _FollowerUsersProviderElement extends AutoDisposeFutureProviderElement<
+    QuerySnapshot<Map<String, dynamic>>?> with FollowerUsersRef {
+  _FollowerUsersProviderElement(super.provider);
 
   @override
-  Set<String> get followers => (origin as FollowerStreamProvider).followers;
+  Set<String> get followers => (origin as FollowerUsersProvider).followers;
 }
 
-String _$followingStreamHash() => r'27f8a696dd2a832f84063a4298db316b1d765866';
+String _$followingUsersHash() => r'5fccbf2febed594bf46dbdd5fcde55ab6b050b10';
 
-/// See also [followingStream].
-@ProviderFor(followingStream)
-const followingStreamProvider = FollowingStreamFamily();
+/// See also [followingUsers].
+@ProviderFor(followingUsers)
+const followingUsersProvider = FollowingUsersFamily();
 
-/// See also [followingStream].
-class FollowingStreamFamily
-    extends Family<AsyncValue<QuerySnapshot<Map<String, dynamic>>>> {
-  /// See also [followingStream].
-  const FollowingStreamFamily();
+/// See also [followingUsers].
+class FollowingUsersFamily
+    extends Family<AsyncValue<QuerySnapshot<Map<String, dynamic>>?>> {
+  /// See also [followingUsers].
+  const FollowingUsersFamily();
 
-  /// See also [followingStream].
-  FollowingStreamProvider call(
+  /// See also [followingUsers].
+  FollowingUsersProvider call(
     Set<String> following,
   ) {
-    return FollowingStreamProvider(
+    return FollowingUsersProvider(
       following,
     );
   }
 
   @override
-  FollowingStreamProvider getProviderOverride(
-    covariant FollowingStreamProvider provider,
+  FollowingUsersProvider getProviderOverride(
+    covariant FollowingUsersProvider provider,
   ) {
     return call(
       provider.following,
@@ -470,33 +337,33 @@ class FollowingStreamFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'followingStreamProvider';
+  String? get name => r'followingUsersProvider';
 }
 
-/// See also [followingStream].
-class FollowingStreamProvider
-    extends AutoDisposeStreamProvider<QuerySnapshot<Map<String, dynamic>>> {
-  /// See also [followingStream].
-  FollowingStreamProvider(
+/// See also [followingUsers].
+class FollowingUsersProvider
+    extends AutoDisposeFutureProvider<QuerySnapshot<Map<String, dynamic>>?> {
+  /// See also [followingUsers].
+  FollowingUsersProvider(
     Set<String> following,
   ) : this._internal(
-          (ref) => followingStream(
-            ref as FollowingStreamRef,
+          (ref) => followingUsers(
+            ref as FollowingUsersRef,
             following,
           ),
-          from: followingStreamProvider,
-          name: r'followingStreamProvider',
+          from: followingUsersProvider,
+          name: r'followingUsersProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$followingStreamHash,
-          dependencies: FollowingStreamFamily._dependencies,
+                  : _$followingUsersHash,
+          dependencies: FollowingUsersFamily._dependencies,
           allTransitiveDependencies:
-              FollowingStreamFamily._allTransitiveDependencies,
+              FollowingUsersFamily._allTransitiveDependencies,
           following: following,
         );
 
-  FollowingStreamProvider._internal(
+  FollowingUsersProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -510,14 +377,14 @@ class FollowingStreamProvider
 
   @override
   Override overrideWith(
-    Stream<QuerySnapshot<Map<String, dynamic>>> Function(
-            FollowingStreamRef provider)
+    FutureOr<QuerySnapshot<Map<String, dynamic>>?> Function(
+            FollowingUsersRef provider)
         create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: FollowingStreamProvider._internal(
-        (ref) => create(ref as FollowingStreamRef),
+      override: FollowingUsersProvider._internal(
+        (ref) => create(ref as FollowingUsersRef),
         from: from,
         name: null,
         dependencies: null,
@@ -529,14 +396,14 @@ class FollowingStreamProvider
   }
 
   @override
-  AutoDisposeStreamProviderElement<QuerySnapshot<Map<String, dynamic>>>
+  AutoDisposeFutureProviderElement<QuerySnapshot<Map<String, dynamic>>?>
       createElement() {
-    return _FollowingStreamProviderElement(this);
+    return _FollowingUsersProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is FollowingStreamProvider && other.following == following;
+    return other is FollowingUsersProvider && other.following == following;
   }
 
   @override
@@ -548,18 +415,152 @@ class FollowingStreamProvider
   }
 }
 
-mixin FollowingStreamRef
-    on AutoDisposeStreamProviderRef<QuerySnapshot<Map<String, dynamic>>> {
+mixin FollowingUsersRef
+    on AutoDisposeFutureProviderRef<QuerySnapshot<Map<String, dynamic>>?> {
   /// The parameter `following` of this provider.
   Set<String> get following;
 }
 
-class _FollowingStreamProviderElement extends AutoDisposeStreamProviderElement<
-    QuerySnapshot<Map<String, dynamic>>> with FollowingStreamRef {
-  _FollowingStreamProviderElement(super.provider);
+class _FollowingUsersProviderElement extends AutoDisposeFutureProviderElement<
+    QuerySnapshot<Map<String, dynamic>>?> with FollowingUsersRef {
+  _FollowingUsersProviderElement(super.provider);
 
   @override
-  Set<String> get following => (origin as FollowingStreamProvider).following;
+  Set<String> get following => (origin as FollowingUsersProvider).following;
+}
+
+String _$singlePostStreamHash() => r'84b293368653334bccbc801615a5cca7e270214b';
+
+/// See also [singlePostStream].
+@ProviderFor(singlePostStream)
+const singlePostStreamProvider = SinglePostStreamFamily();
+
+/// See also [singlePostStream].
+class SinglePostStreamFamily
+    extends Family<AsyncValue<DocumentSnapshot<Map<String, dynamic>>>> {
+  /// See also [singlePostStream].
+  const SinglePostStreamFamily();
+
+  /// See also [singlePostStream].
+  SinglePostStreamProvider call(
+    String postId,
+  ) {
+    return SinglePostStreamProvider(
+      postId,
+    );
+  }
+
+  @override
+  SinglePostStreamProvider getProviderOverride(
+    covariant SinglePostStreamProvider provider,
+  ) {
+    return call(
+      provider.postId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'singlePostStreamProvider';
+}
+
+/// See also [singlePostStream].
+class SinglePostStreamProvider
+    extends AutoDisposeStreamProvider<DocumentSnapshot<Map<String, dynamic>>> {
+  /// See also [singlePostStream].
+  SinglePostStreamProvider(
+    String postId,
+  ) : this._internal(
+          (ref) => singlePostStream(
+            ref as SinglePostStreamRef,
+            postId,
+          ),
+          from: singlePostStreamProvider,
+          name: r'singlePostStreamProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$singlePostStreamHash,
+          dependencies: SinglePostStreamFamily._dependencies,
+          allTransitiveDependencies:
+              SinglePostStreamFamily._allTransitiveDependencies,
+          postId: postId,
+        );
+
+  SinglePostStreamProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.postId,
+  }) : super.internal();
+
+  final String postId;
+
+  @override
+  Override overrideWith(
+    Stream<DocumentSnapshot<Map<String, dynamic>>> Function(
+            SinglePostStreamRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SinglePostStreamProvider._internal(
+        (ref) => create(ref as SinglePostStreamRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        postId: postId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeStreamProviderElement<DocumentSnapshot<Map<String, dynamic>>>
+      createElement() {
+    return _SinglePostStreamProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SinglePostStreamProvider && other.postId == postId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, postId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin SinglePostStreamRef
+    on AutoDisposeStreamProviderRef<DocumentSnapshot<Map<String, dynamic>>> {
+  /// The parameter `postId` of this provider.
+  String get postId;
+}
+
+class _SinglePostStreamProviderElement extends AutoDisposeStreamProviderElement<
+    DocumentSnapshot<Map<String, dynamic>>> with SinglePostStreamRef {
+  _SinglePostStreamProviderElement(super.provider);
+
+  @override
+  String get postId => (origin as SinglePostStreamProvider).postId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

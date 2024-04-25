@@ -22,7 +22,7 @@ class HomeBody extends StatelessWidget {
       OffstageNavigator(
         tabItem: TabItem.feed,
         navKey: navKeys[TabItem.feed],
-        screen: FeedScreen(userId: currentUserId),
+        screen: const FeedScreen(),
       ),
       OffstageNavigator(
         tabItem: TabItem.search,

@@ -8,13 +8,13 @@ import 'package:instagram_clone/core/repositories/core_repositories.dart';
 import 'package:instagram_clone/core/repositories/firestore_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/core/widgets/loading_wrapper.dart';
-import 'package:instagram_clone/features/auth/domain/entities/user_entitiy.dart';
+import 'package:instagram_clone/features/auth/domain/entities/user_entity.dart';
 import 'package:instagram_clone/features/profile/presentation/widgets/edit_form.dart';
 import 'package:instagram_clone/features/profile/presentation/widgets/user_photo.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-class EditInfoPage extends HookConsumerWidget {
-  const EditInfoPage(this.user, {super.key});
+class EditProfilePage extends HookConsumerWidget {
+  const EditProfilePage(this.user, {super.key});
   final UserEntity user;
 
   @override
@@ -34,13 +34,11 @@ class EditInfoPage extends HookConsumerWidget {
       }).catchError((error) => null);
     }
 
-    Future<void> submit(String username, String bio) async {
+    Future<void> submit(String bio) async {
       requestPending.value = sl
           .get<FirestoreRepositories>()
           .updateInfo(
               userId: user.userId,
-              username: username,
-              usernameChanged: username != user.username,
               bio: bio,
               profileImageUrl: user.profileImage,
               profileImage: profileImage.value)
@@ -56,9 +54,8 @@ class EditInfoPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Information')
-            .fontSize(18)
-            .fontWeight(FontWeight.bold),
+        title:
+            const Text('Edit Profile').fontSize(18).fontWeight(FontWeight.bold),
       ),
       body: LoadingWrapper(
         isLoading: snapshot.connectionState == ConnectionState.waiting,

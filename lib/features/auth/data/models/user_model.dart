@@ -5,7 +5,7 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:instagram_clone/core/serializers/serializers.dart';
-import 'package:instagram_clone/features/auth/domain/entities/user_entitiy.dart';
+import 'package:instagram_clone/features/auth/domain/entities/user_entity.dart';
 
 part 'user_model.g.dart';
 
@@ -23,7 +23,9 @@ abstract class UserModel
   @override
   String get bio;
   @override
-  BuiltSet<String> get posts;
+  BuiltList<PostItem> get posts;
+  @override
+  BuiltList<PostItem> get savedPosts;
   @override
   BuiltSet<String> get followers;
   @override
@@ -41,6 +43,18 @@ abstract class UserModel
   static UserEntity fromDocument(DocumentSnapshot doc) {
     return serializers.deserializeWith(
         UserModel.serializer, doc.data() as Map<String, dynamic>)!;
+    // return UserModel((b) => b
+    //   ..userId = doc['userId']
+    //   ..username = doc['username']
+    //   ..email = doc['email']
+    //   ..profileImage = doc['profileImage']
+    //   ..bio = doc['bio']
+    //   ..followers = SetBuilder([...doc['followers']])
+    //   ..following = SetBuilder([...doc['following']])
+    //   ..posts =
+    //       ListBuilder(doc['posts'].map((post) => <String, String>{...post}))
+    //   ..savedPosts = ListBuilder(
+    //       doc['savedPosts'].map((post) => <String, String>{...post})));
   }
 
   static Serializer<UserModel> get serializer => _$userModelSerializer;

@@ -45,12 +45,12 @@ class PostDescription extends StatelessWidget {
               ),
             ),
           ),
-          if (post.comments.isNotEmpty)
+          if (post.comments > 0)
             InkWell(
               child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(
-                    'View all ${post.comments.length} comments',
+                    'View all ${post.comments} comments',
                     style: const TextStyle(fontSize: 16),
                   )),
               onTap: () => Navigator.of(context).push(

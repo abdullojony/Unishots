@@ -41,7 +41,7 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
       ..postUrl = postUrl
       ..description = description
       ..publishedDate = DateTime.now().toString()
-      ..comments = ListBuilder()
+      ..comments = 0
       ..likes = SetBuilder());
 
     // add post to firestore
@@ -49,18 +49,29 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
 
     // add post id to user posts
     await firestore.collection('users').doc(userId).update({
-      'posts': FieldValue.arrayUnion([postId])
+      'posts': FieldValue.arrayUnion([
+        {'id': post.postId, 'image': post.postUrl}
+      ])
     });
 
     return post;
   }
 
   @override
+  Future<void> updatePost(
+      {required String postId, required String description}) async {
+    await firestore
+        .collection('posts')
+        .doc(postId)
+        .update({'description': description});
+  }
+
+  @override
   Future<void> likePost(
       {required String postId,
       required String userId,
-      required BuiltSet likes}) async {
-    if (likes.contains(userId)) {
+      required bool isLiked}) async {
+    if (isLiked) {
       // if the likes list contains the userId, we need to remove it
       await firestore.collection('posts').doc(postId).update({
         'likes': FieldValue.arrayRemove([userId])
@@ -105,9 +116,10 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
       ..likes = ListBuilder());
 
     // add comment to post comments
-    await firestore.collection('posts').doc(postId).update({
-      'comments': FieldValue.arrayUnion([commentId])
-    });
+    await firestore
+        .collection('posts')
+        .doc(postId)
+        .update({'comments': FieldValue.increment(1)});
 
     // upload comment to firestore
     await firestore
@@ -211,24 +223,9 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
   @override
   Future<void> updateInfo(
       {required String userId,
-      required String username,
-      required bool usernameChanged,
       required String bio,
       required String profileImageUrl,
       Uint8List? profileImage}) async {
-    if (usernameChanged) {
-      // check if username exist
-      final duplicates = await sl
-          .get<FirebaseFirestore>()
-          .collection('users')
-          .where('username', isEqualTo: username)
-          .get();
-
-      if (duplicates.docs.isNotEmpty) {
-        throw Exception('Username already exist');
-      }
-    }
-
     if (profileImage != null) {
       // upload profileImage to storage
       profileImageUrl = await sl.get<StorageRepositories>().uploadImage(
@@ -236,9 +233,35 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
     }
 
     await firestore.collection('users').doc(userId).update({
-      'username': username,
       'bio': bio,
       'profileImage': profileImageUrl,
     });
+  }
+
+  @override
+  Future<void> savePost(
+      {required String postId,
+      required String userId,
+      required String postUrl,
+      required bool isSaved}) async {
+    if (isSaved) {
+      await firestore.collection('users').doc(userId).update({
+        'savedPosts': FieldValue.arrayRemove([
+          {'id': postId, 'image': postUrl}
+        ]),
+      });
+      await firestore.collection('posts').doc(postId).update({
+        'savedBy': FieldValue.arrayRemove([userId]),
+      });
+    } else {
+      await firestore.collection('users').doc(userId).update({
+        'savedPosts': FieldValue.arrayUnion([
+          {'id': postId, 'image': postUrl}
+        ]),
+      });
+      await firestore.collection('posts').doc(postId).update({
+        'savedBy': FieldValue.arrayUnion([userId]),
+      });
+    }
   }
 }

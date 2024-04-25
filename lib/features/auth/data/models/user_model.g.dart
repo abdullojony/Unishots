@@ -35,7 +35,11 @@ class _$UserModelSerializer implements StructuredSerializer<UserModel> {
       'posts',
       serializers.serialize(object.posts,
           specifiedType:
-              const FullType(BuiltSet, const [const FullType(String)])),
+              const FullType(BuiltList, const [const FullType(PostItem)])),
+      'savedPosts',
+      serializers.serialize(object.savedPosts,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(PostItem)])),
       'followers',
       serializers.serialize(object.followers,
           specifiedType:
@@ -82,9 +86,15 @@ class _$UserModelSerializer implements StructuredSerializer<UserModel> {
           break;
         case 'posts':
           result.posts.replace(serializers.deserialize(value,
-                  specifiedType:
-                      const FullType(BuiltSet, const [const FullType(String)]))!
-              as BuiltSet<Object?>);
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(PostItem)]))!
+              as BuiltList<Object?>);
+          break;
+        case 'savedPosts':
+          result.savedPosts.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(PostItem)]))!
+              as BuiltList<Object?>);
           break;
         case 'followers':
           result.followers.replace(serializers.deserialize(value,
@@ -117,7 +127,9 @@ class _$UserModel extends UserModel {
   @override
   final String bio;
   @override
-  final BuiltSet<String> posts;
+  final BuiltList<PostItem> posts;
+  @override
+  final BuiltList<PostItem> savedPosts;
   @override
   final BuiltSet<String> followers;
   @override
@@ -133,6 +145,7 @@ class _$UserModel extends UserModel {
       required this.profileImage,
       required this.bio,
       required this.posts,
+      required this.savedPosts,
       required this.followers,
       required this.following})
       : super._() {
@@ -143,6 +156,8 @@ class _$UserModel extends UserModel {
         profileImage, r'UserModel', 'profileImage');
     BuiltValueNullFieldError.checkNotNull(bio, r'UserModel', 'bio');
     BuiltValueNullFieldError.checkNotNull(posts, r'UserModel', 'posts');
+    BuiltValueNullFieldError.checkNotNull(
+        savedPosts, r'UserModel', 'savedPosts');
     BuiltValueNullFieldError.checkNotNull(followers, r'UserModel', 'followers');
     BuiltValueNullFieldError.checkNotNull(following, r'UserModel', 'following');
   }
@@ -164,6 +179,7 @@ class _$UserModel extends UserModel {
         profileImage == other.profileImage &&
         bio == other.bio &&
         posts == other.posts &&
+        savedPosts == other.savedPosts &&
         followers == other.followers &&
         following == other.following;
   }
@@ -177,6 +193,7 @@ class _$UserModel extends UserModel {
     _$hash = $jc(_$hash, profileImage.hashCode);
     _$hash = $jc(_$hash, bio.hashCode);
     _$hash = $jc(_$hash, posts.hashCode);
+    _$hash = $jc(_$hash, savedPosts.hashCode);
     _$hash = $jc(_$hash, followers.hashCode);
     _$hash = $jc(_$hash, following.hashCode);
     _$hash = $jf(_$hash);
@@ -192,6 +209,7 @@ class _$UserModel extends UserModel {
           ..add('profileImage', profileImage)
           ..add('bio', bio)
           ..add('posts', posts)
+          ..add('savedPosts', savedPosts)
           ..add('followers', followers)
           ..add('following', following))
         .toString();
@@ -221,9 +239,16 @@ class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
   String? get bio => _$this._bio;
   set bio(String? bio) => _$this._bio = bio;
 
-  SetBuilder<String>? _posts;
-  SetBuilder<String> get posts => _$this._posts ??= new SetBuilder<String>();
-  set posts(SetBuilder<String>? posts) => _$this._posts = posts;
+  ListBuilder<PostItem>? _posts;
+  ListBuilder<PostItem> get posts =>
+      _$this._posts ??= new ListBuilder<PostItem>();
+  set posts(ListBuilder<PostItem>? posts) => _$this._posts = posts;
+
+  ListBuilder<PostItem>? _savedPosts;
+  ListBuilder<PostItem> get savedPosts =>
+      _$this._savedPosts ??= new ListBuilder<PostItem>();
+  set savedPosts(ListBuilder<PostItem>? savedPosts) =>
+      _$this._savedPosts = savedPosts;
 
   SetBuilder<String>? _followers;
   SetBuilder<String> get followers =>
@@ -246,6 +271,7 @@ class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
       _profileImage = $v.profileImage;
       _bio = $v.bio;
       _posts = $v.posts.toBuilder();
+      _savedPosts = $v.savedPosts.toBuilder();
       _followers = $v.followers.toBuilder();
       _following = $v.following.toBuilder();
       _$v = null;
@@ -283,6 +309,7 @@ class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
               bio: BuiltValueNullFieldError.checkNotNull(
                   bio, r'UserModel', 'bio'),
               posts: posts.build(),
+              savedPosts: savedPosts.build(),
               followers: followers.build(),
               following: following.build());
     } catch (_) {
@@ -290,6 +317,8 @@ class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
       try {
         _$failedField = 'posts';
         posts.build();
+        _$failedField = 'savedPosts';
+        savedPosts.build();
         _$failedField = 'followers';
         followers.build();
         _$failedField = 'following';

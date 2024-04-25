@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:instagram_clone/features/auth/domain/entities/user_entitiy.dart';
+import 'package:instagram_clone/features/auth/domain/entities/user_entity.dart';
 
 abstract class AuthRepositories {
   Future<UserEntity> signupUser(

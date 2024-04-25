@@ -41,10 +41,13 @@ class _$PostModelSerializer implements StructuredSerializer<PostModel> {
           specifiedType: const FullType(String)),
       'comments',
       serializers.serialize(object.comments,
-          specifiedType:
-              const FullType(BuiltList, const [const FullType(String)])),
+          specifiedType: const FullType(int)),
       'likes',
       serializers.serialize(object.likes,
+          specifiedType:
+              const FullType(BuiltSet, const [const FullType(String)])),
+      'savedBy',
+      serializers.serialize(object.savedBy,
           specifiedType:
               const FullType(BuiltSet, const [const FullType(String)])),
     ];
@@ -92,13 +95,17 @@ class _$PostModelSerializer implements StructuredSerializer<PostModel> {
               specifiedType: const FullType(String))! as String;
           break;
         case 'comments':
-          result.comments.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      BuiltList, const [const FullType(String)]))!
-              as BuiltList<Object?>);
+          result.comments = serializers.deserialize(value,
+              specifiedType: const FullType(int))! as int;
           break;
         case 'likes':
           result.likes.replace(serializers.deserialize(value,
+                  specifiedType:
+                      const FullType(BuiltSet, const [const FullType(String)]))!
+              as BuiltSet<Object?>);
+          break;
+        case 'savedBy':
+          result.savedBy.replace(serializers.deserialize(value,
                   specifiedType:
                       const FullType(BuiltSet, const [const FullType(String)]))!
               as BuiltSet<Object?>);
@@ -126,9 +133,11 @@ class _$PostModel extends PostModel {
   @override
   final String publishedDate;
   @override
-  final BuiltList<String> comments;
+  final int comments;
   @override
   final BuiltSet<String> likes;
+  @override
+  final BuiltSet<String> savedBy;
 
   factory _$PostModel([void Function(PostModelBuilder)? updates]) =>
       (new PostModelBuilder()..update(updates))._build();
@@ -142,7 +151,8 @@ class _$PostModel extends PostModel {
       required this.description,
       required this.publishedDate,
       required this.comments,
-      required this.likes})
+      required this.likes,
+      required this.savedBy})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(userId, r'PostModel', 'userId');
     BuiltValueNullFieldError.checkNotNull(postId, r'PostModel', 'postId');
@@ -156,6 +166,7 @@ class _$PostModel extends PostModel {
         publishedDate, r'PostModel', 'publishedDate');
     BuiltValueNullFieldError.checkNotNull(comments, r'PostModel', 'comments');
     BuiltValueNullFieldError.checkNotNull(likes, r'PostModel', 'likes');
+    BuiltValueNullFieldError.checkNotNull(savedBy, r'PostModel', 'savedBy');
   }
 
   @override
@@ -177,7 +188,8 @@ class _$PostModel extends PostModel {
         description == other.description &&
         publishedDate == other.publishedDate &&
         comments == other.comments &&
-        likes == other.likes;
+        likes == other.likes &&
+        savedBy == other.savedBy;
   }
 
   @override
@@ -192,6 +204,7 @@ class _$PostModel extends PostModel {
     _$hash = $jc(_$hash, publishedDate.hashCode);
     _$hash = $jc(_$hash, comments.hashCode);
     _$hash = $jc(_$hash, likes.hashCode);
+    _$hash = $jc(_$hash, savedBy.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -207,7 +220,8 @@ class _$PostModel extends PostModel {
           ..add('description', description)
           ..add('publishedDate', publishedDate)
           ..add('comments', comments)
-          ..add('likes', likes))
+          ..add('likes', likes)
+          ..add('savedBy', savedBy))
         .toString();
   }
 }
@@ -245,14 +259,18 @@ class PostModelBuilder implements Builder<PostModel, PostModelBuilder> {
   set publishedDate(String? publishedDate) =>
       _$this._publishedDate = publishedDate;
 
-  ListBuilder<String>? _comments;
-  ListBuilder<String> get comments =>
-      _$this._comments ??= new ListBuilder<String>();
-  set comments(ListBuilder<String>? comments) => _$this._comments = comments;
+  int? _comments;
+  int? get comments => _$this._comments;
+  set comments(int? comments) => _$this._comments = comments;
 
   SetBuilder<String>? _likes;
   SetBuilder<String> get likes => _$this._likes ??= new SetBuilder<String>();
   set likes(SetBuilder<String>? likes) => _$this._likes = likes;
+
+  SetBuilder<String>? _savedBy;
+  SetBuilder<String> get savedBy =>
+      _$this._savedBy ??= new SetBuilder<String>();
+  set savedBy(SetBuilder<String>? savedBy) => _$this._savedBy = savedBy;
 
   PostModelBuilder();
 
@@ -266,8 +284,9 @@ class PostModelBuilder implements Builder<PostModel, PostModelBuilder> {
       _postUrl = $v.postUrl;
       _description = $v.description;
       _publishedDate = $v.publishedDate;
-      _comments = $v.comments.toBuilder();
+      _comments = $v.comments;
       _likes = $v.likes.toBuilder();
+      _savedBy = $v.savedBy.toBuilder();
       _$v = null;
     }
     return this;
@@ -306,15 +325,17 @@ class PostModelBuilder implements Builder<PostModel, PostModelBuilder> {
                   description, r'PostModel', 'description'),
               publishedDate: BuiltValueNullFieldError.checkNotNull(
                   publishedDate, r'PostModel', 'publishedDate'),
-              comments: comments.build(),
-              likes: likes.build());
+              comments: BuiltValueNullFieldError.checkNotNull(
+                  comments, r'PostModel', 'comments'),
+              likes: likes.build(),
+              savedBy: savedBy.build());
     } catch (_) {
       late String _$failedField;
       try {
-        _$failedField = 'comments';
-        comments.build();
         _$failedField = 'likes';
         likes.build();
+        _$failedField = 'savedBy';
+        savedBy.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             r'PostModel', _$failedField, e.toString());

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:instagram_clone/core/widgets/failed_widget.dart';
 import 'package:instagram_clone/core/widgets/loading_widget.dart';
-import 'package:instagram_clone/features/auth/domain/entities/user_entitiy.dart';
+import 'package:instagram_clone/features/auth/domain/entities/user_entity.dart';
 import 'package:instagram_clone/features/auth/presentation/pages/login_screen.dart';
+import 'package:instagram_clone/features/feed/data/riverpod/feed_provider.dart';
 import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/home_body.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/home_bottom_nav.dart';
@@ -51,6 +52,12 @@ class HomeScreen extends ConsumerWidget {
     return currentUser.when(
         data: (user) {
           if (user != null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ref
+                  .read(feedSetProvider.notifier)
+                  .update((state) => {...user.following, user.userId});
+            });
+
             return HomeResources(
               goToFirst: goToFirst,
               currentUser: user,

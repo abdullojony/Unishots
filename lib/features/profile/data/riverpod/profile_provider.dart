@@ -5,42 +5,47 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'profile_provider.g.dart';
 
 @riverpod
-Stream<QuerySnapshot<Map<String, dynamic>>> userPostStream(
-    UserPostStreamRef ref, String userId) {
-  return sl
-      .get<FirebaseFirestore>()
-      .collection('posts')
-      .where('userId', isEqualTo: userId)
-      .orderBy('publishedDate', descending: true)
-      .snapshots();
-}
-
-@riverpod
-Stream<QuerySnapshot<Map<String, dynamic>>> userStream(
+Stream<DocumentSnapshot<Map<String, dynamic>>> userStream(
     UserStreamRef ref, String userId) {
   return sl
       .get<FirebaseFirestore>()
       .collection('users')
-      .where('userId', isEqualTo: userId)
+      .doc(userId)
       .snapshots();
 }
 
 @riverpod
-Stream<QuerySnapshot<Map<String, dynamic>>> followerStream(
-    FollowerStreamRef ref, Set<String> followers) {
+Future<QuerySnapshot<Map<String, dynamic>>?> followerUsers(
+    FollowerUsersRef ref, Set<String> followers) {
+  if (followers.isEmpty) {
+    return Future(() => null);
+  }
   return sl
       .get<FirebaseFirestore>()
       .collection('users')
       .where('userId', whereIn: followers)
-      .snapshots();
+      .get();
 }
 
 @riverpod
-Stream<QuerySnapshot<Map<String, dynamic>>> followingStream(
-    FollowingStreamRef ref, Set<String> following) {
+Future<QuerySnapshot<Map<String, dynamic>>?> followingUsers(
+    FollowingUsersRef ref, Set<String> following) {
+  if (following.isEmpty) {
+    return Future(() => null);
+  }
   return sl
       .get<FirebaseFirestore>()
       .collection('users')
       .where('userId', whereIn: following)
+      .get();
+}
+
+@riverpod
+Stream<DocumentSnapshot<Map<String, dynamic>>> singlePostStream(
+    SinglePostStreamRef ref, String postId) {
+  return sl
+      .get<FirebaseFirestore>()
+      .collection('posts')
+      .doc(postId)
       .snapshots();
 }
