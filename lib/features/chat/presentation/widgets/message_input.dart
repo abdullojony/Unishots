@@ -21,21 +21,20 @@ class MessageInput extends HookWidget {
     final snapshot = useFuture(request.value);
 
     void sendMessage() {
-      if (messageController.text.isEmpty) {
-        return;
+      if (messageController.text.isNotEmpty) {
+        request.value = sl
+            .get<FirestoreRepositories>()
+            .sendMessage(
+                userImage: user.profileImage,
+                senderId: user.userId,
+                receiverId: chat.chatId,
+                username: user.username,
+                content: messageController.text)
+            .then((value) => messageController.clear(),
+                onError: (error) => sl
+                    .get<CoreRepositories>()
+                    .showSnackBar(context, message: error.toString()));
       }
-      request.value = sl
-          .get<FirestoreRepositories>()
-          .sendMessage(
-              userImage: user.profileImage,
-              senderId: user.userId,
-              receiverId: chat.chatId,
-              username: user.username,
-              content: messageController.text)
-          .then((value) => messageController.clear(),
-              onError: (error) => sl
-                  .get<CoreRepositories>()
-                  .showSnackBar(context, message: error.toString()));
     }
 
     return Padding(

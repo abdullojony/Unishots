@@ -10,7 +10,7 @@ import 'package:instagram_clone/features/home/presentation/widgets/home_body.dar
 import 'package:instagram_clone/features/home/presentation/widgets/home_bottom_nav.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
 
-// Inherited widget to provide functions to the children
+// Inherited widget to provide resources to the children
 class HomeResources extends InheritedWidget {
   final UserEntity currentUser;
   final void Function(TabItem tabItem) goToFirst;
@@ -29,25 +29,25 @@ class HomeResources extends InheritedWidget {
       oldWidget.currentUser != currentUser;
 }
 
+// keys for each tab navigator for maintaining state
+final navigatorKeys = {
+  TabItem.feed: GlobalKey<NavigatorState>(),
+  TabItem.search: GlobalKey<NavigatorState>(),
+  TabItem.chats: GlobalKey<NavigatorState>(),
+  TabItem.profile: GlobalKey<NavigatorState>(),
+};
+
+// function to pop to first route in each tab
+void goToFirst(TabItem tabItem) {
+  navigatorKeys[tabItem]!.currentState?.popUntil((route) => route.isFirst);
+}
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser = ref.watch(currentUserProvider);
-
-    // keys for each tab navigator for maintaining state
-    final navigatorKeys = {
-      TabItem.feed: GlobalKey<NavigatorState>(),
-      TabItem.search: GlobalKey<NavigatorState>(),
-      TabItem.chats: GlobalKey<NavigatorState>(),
-      TabItem.profile: GlobalKey<NavigatorState>(),
-    };
-
-    // function to pop to first route in each tab
-    void goToFirst(TabItem tabItem) {
-      navigatorKeys[tabItem]!.currentState?.popUntil((route) => route.isFirst);
-    }
 
     return currentUser.when(
         data: (user) {
@@ -62,8 +62,11 @@ class HomeScreen extends ConsumerWidget {
               goToFirst: goToFirst,
               currentUser: user,
               child: Scaffold(
-                body: HomeBody(navigatorKeys),
-                bottomNavigationBar: const HomeBottomNav(),
+                body: HomeBody(
+                  navKeys: navigatorKeys,
+                  currentUserId: user.userId,
+                ),
+                bottomNavigationBar: const HomeBottomNav(goToFirst),
               ),
             );
           } else {

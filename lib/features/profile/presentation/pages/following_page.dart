@@ -4,7 +4,6 @@ import 'package:instagram_clone/core/widgets/empty_page.dart';
 import 'package:instagram_clone/core/widgets/failed_widget.dart';
 import 'package:instagram_clone/core/widgets/loading_widget.dart';
 import 'package:instagram_clone/core/widgets/user_list_item.dart';
-import 'package:instagram_clone/features/auth/data/models/user_model.dart';
 import 'package:instagram_clone/features/profile/data/riverpod/profile_provider.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -22,12 +21,12 @@ class FollowingPage extends ConsumerWidget {
         title: const Text('Following').fontSize(18).fontWeight(FontWeight.bold),
       ),
       body: followingUsers.when(
-          data: (users) => users != null
-              ? ListView.builder(
+          data: (users) => users == null || users.docs.isEmpty
+              ? const EmptyPage('Follow users to see them here')
+              : ListView.builder(
                   itemCount: users.docs.length,
                   itemBuilder: (context, index) =>
-                      UserListItem(UserModel.fromDocument(users.docs[index])))
-              : const EmptyPage('Follow users to see them here'),
+                      UserListItem(users.docs[index])),
           error: (error, stack) => FailedWidget(error: error.toString()),
           loading: () => const LoadingWidget()),
     );

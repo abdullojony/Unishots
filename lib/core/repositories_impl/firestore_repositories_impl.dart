@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:instagram_clone/core/repositories/firestore_repositories.dart';
 import 'package:instagram_clone/core/repositories/storage_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
@@ -9,6 +10,7 @@ import 'package:instagram_clone/features/chat/data/models/chat_models.dart';
 import 'package:instagram_clone/features/chat/domain/entities/chat_entities.dart';
 import 'package:instagram_clone/features/feed/data/models/comment_model.dart';
 import 'package:instagram_clone/features/feed/data/models/post_model.dart';
+import 'package:instagram_clone/features/feed/domain/entities/comment_entity.dart';
 import 'package:instagram_clone/features/feed/domain/entities/post_entity.dart';
 import 'package:uuid/uuid.dart';
 
@@ -72,12 +74,10 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
       required String userId,
       required bool isLiked}) async {
     if (isLiked) {
-      // if the likes list contains the userId, we need to remove it
       await firestore.collection('posts').doc(postId).update({
         'likes': FieldValue.arrayRemove([userId])
       });
     } else {
-      // else we need to add userId to the likes array
       await firestore.collection('posts').doc(postId).update({
         'likes': FieldValue.arrayUnion([userId])
       });
@@ -86,16 +86,43 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
 
   @override
   Future<String> deletePost(
-      {required String postId, required String userId}) async {
+      {required String postId,
+      required String postUrl,
+      required String userId}) async {
     await firestore.collection('posts').doc(postId).delete();
     await firestore.collection('users').doc(userId).update({
-      'posts': FieldValue.arrayRemove([postId])
+      'posts': FieldValue.arrayRemove([
+        {'id': postId, 'image': postUrl}
+      ]),
+      'savedPosts': FieldValue.arrayRemove([postId]),
     });
     return postId;
   }
 
   @override
-  Future<void> postComment(
+  Future<void> savePost(
+      {required String postId,
+      required String userId,
+      required bool isSaved}) async {
+    if (isSaved) {
+      await firestore.collection('users').doc(userId).update({
+        'savedPosts': FieldValue.arrayRemove([postId]),
+      });
+      await firestore.collection('posts').doc(postId).update({
+        'savedBy': FieldValue.arrayRemove([userId]),
+      });
+    } else {
+      await firestore.collection('users').doc(userId).update({
+        'savedPosts': FieldValue.arrayUnion([postId]),
+      });
+      await firestore.collection('posts').doc(postId).update({
+        'savedBy': FieldValue.arrayUnion([userId]),
+      });
+    }
+  }
+
+  @override
+  Future<CommentEntity> postComment(
       {required String postId,
       required String commentText,
       required String userId,
@@ -128,6 +155,25 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
         .collection('comments')
         .doc(commentId)
         .set(comment.toMap());
+
+    return comment;
+  }
+
+  @override
+  Future<void> deleteComment({
+    required String postId,
+    required String commentId,
+  }) async {
+    await firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(commentId)
+        .delete();
+
+    await firestore.collection('posts').doc(postId).update({
+      'comments': FieldValue.increment(-1),
+    });
   }
 
   @override
@@ -162,7 +208,8 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
     final chat = ChatModel((b) => b
       ..chatId = chatId
       ..username = username
-      ..profileImageUrl = profileImageUrl);
+      ..profileImageUrl = profileImageUrl
+      ..unreadCount = 0);
 
     // upload chat model to firestore
     await firestore
@@ -176,7 +223,29 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
   }
 
   @override
-  Future<void> sendMessage(
+  Future<void> deleteChat({
+    required String userId,
+    required ChatEntity chat,
+    required bool deleteForBoth,
+  }) async {
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('chats')
+        .doc(chat.chatId)
+        .delete();
+    if (deleteForBoth) {
+      await firestore
+          .collection('users')
+          .doc(chat.chatId)
+          .collection('chats')
+          .doc(userId)
+          .delete();
+    }
+  }
+
+  @override
+  Future<MessageEntity> sendMessage(
       {required String senderId,
       required String receiverId,
       required String username,
@@ -205,19 +274,44 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
         .doc(id)
         .set(message.toMap());
 
+    // get reference to receiver
     final receiver = firestore
         .collection('users')
         .doc(receiverId)
         .collection('chats')
         .doc(senderId);
 
-    await receiver.set({
-      'chatId': senderId,
-      'profileImageUrl': userImage,
-      'username': username
-    });
+    // check if chat exist for receiver
+    final doc = await receiver.get();
+    if (doc.data() == null) {
+      await receiver.set({
+        'chatId': senderId,
+        'profileImageUrl': userImage,
+        'username': username,
+        'unreadCount': 0,
+      });
+    }
 
+    // add message to receiver's chat
     await receiver.collection('messages').doc(id).set(message.toMap());
+
+    // increment unreadCount for receiver
+    await receiver.update({'unreadCount': FieldValue.increment(1)});
+
+    return message;
+  }
+
+  @override
+  Future<void> readChat({required String chatId}) async {
+    final userId = sl.get<FirebaseAuth>().currentUser!.uid;
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('chats')
+        .doc(chatId)
+        .update({
+      'unreadCount': 0,
+    });
   }
 
   @override
@@ -236,32 +330,5 @@ class FirestoreRepositoriesImpl implements FirestoreRepositories {
       'bio': bio,
       'profileImage': profileImageUrl,
     });
-  }
-
-  @override
-  Future<void> savePost(
-      {required String postId,
-      required String userId,
-      required String postUrl,
-      required bool isSaved}) async {
-    if (isSaved) {
-      await firestore.collection('users').doc(userId).update({
-        'savedPosts': FieldValue.arrayRemove([
-          {'id': postId, 'image': postUrl}
-        ]),
-      });
-      await firestore.collection('posts').doc(postId).update({
-        'savedBy': FieldValue.arrayRemove([userId]),
-      });
-    } else {
-      await firestore.collection('users').doc(userId).update({
-        'savedPosts': FieldValue.arrayUnion([
-          {'id': postId, 'image': postUrl}
-        ]),
-      });
-      await firestore.collection('posts').doc(postId).update({
-        'savedBy': FieldValue.arrayUnion([userId]),
-      });
-    }
   }
 }

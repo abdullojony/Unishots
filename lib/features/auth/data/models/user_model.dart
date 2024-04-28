@@ -25,7 +25,7 @@ abstract class UserModel
   @override
   BuiltList<PostItem> get posts;
   @override
-  BuiltList<PostItem> get savedPosts;
+  BuiltSet<String> get savedPosts;
   @override
   BuiltSet<String> get followers;
   @override
@@ -43,18 +43,6 @@ abstract class UserModel
   static UserEntity fromDocument(DocumentSnapshot doc) {
     return serializers.deserializeWith(
         UserModel.serializer, doc.data() as Map<String, dynamic>)!;
-    // return UserModel((b) => b
-    //   ..userId = doc['userId']
-    //   ..username = doc['username']
-    //   ..email = doc['email']
-    //   ..profileImage = doc['profileImage']
-    //   ..bio = doc['bio']
-    //   ..followers = SetBuilder([...doc['followers']])
-    //   ..following = SetBuilder([...doc['following']])
-    //   ..posts =
-    //       ListBuilder(doc['posts'].map((post) => <String, String>{...post}))
-    //   ..savedPosts = ListBuilder(
-    //       doc['savedPosts'].map((post) => <String, String>{...post})));
   }
 
   static Serializer<UserModel> get serializer => _$userModelSerializer;

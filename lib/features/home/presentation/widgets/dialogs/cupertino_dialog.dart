@@ -16,17 +16,18 @@ class CupertinoDialog extends StatelessWidget {
         children: [
           CupertinoDialogAction(
             onPressed: () {
-              sl
-                  .get<CoreRepositories>()
-                  .pickImage(source: ImageSource.camera)
-                  .then((value) {
+              sl.get<CoreRepositories>().pickImage(source: ImageSource.camera).then(
+                  (value) {
                 if (value != null) {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (_) => PostScreen(postImage: value)));
                 } else {
                   Navigator.of(context).pop();
                 }
-              });
+              },
+                  onError: (e) => sl
+                      .get<CoreRepositories>()
+                      .showSnackBar(context, message: e.toString()));
             },
             child: const Text('Camera'),
           ),
@@ -43,7 +44,10 @@ class CupertinoDialog extends StatelessWidget {
                 } else {
                   Navigator.of(context).pop();
                 }
-              });
+              },
+                      onError: (e) => sl
+                          .get<CoreRepositories>()
+                          .showSnackBar(context, message: e.toString()));
             },
             child: const Text('Gallery'),
           ),

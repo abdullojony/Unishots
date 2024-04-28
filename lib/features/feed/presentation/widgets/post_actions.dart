@@ -25,11 +25,7 @@ class PostActions extends StatelessWidget {
     void savePost(bool saved) {
       sl
           .get<FirestoreRepositories>()
-          .savePost(
-              postId: post.postId,
-              userId: currentUserId,
-              postUrl: post.postUrl,
-              isSaved: saved)
+          .savePost(postId: post.postId, userId: currentUserId, isSaved: saved)
           .then((value) => !saved
               ? sl.get<CoreRepositories>().showSnackBar(context,
                   message: 'Post saved', duration: const Duration(seconds: 1))

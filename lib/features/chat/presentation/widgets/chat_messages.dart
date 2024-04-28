@@ -14,11 +14,13 @@ class ChatMessages extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = context
+    final currentUserId = context
         .dependOnInheritedWidgetOfExactType<HomeResources>()!
-        .currentUser;
+        .currentUser
+        .userId;
+
     final messageStream =
-        ref.watch(MessageStreamProvider(user.userId, chat.chatId));
+        ref.watch(MessageStreamProvider(currentUserId, chat.chatId));
 
     return messageStream.when(
       loading: () => const LoadingWidget(),
@@ -43,14 +45,14 @@ class ChatMessages extends ConsumerWidget {
           if (nextUserIsSame) {
             return MessageBubble.next(
               message: message.content,
-              isMe: message.senderId == user.userId,
+              isMe: message.senderId == currentUserId,
             );
           } else {
             return MessageBubble.first(
               userImage: message.userImage,
               username: message.username,
               message: message.content,
-              isMe: message.senderId == user.userId,
+              isMe: message.senderId == currentUserId,
             );
           }
         },

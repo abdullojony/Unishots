@@ -1,10 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:instagram_clone/core/repositories/firestore_repositories.dart';
+import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/features/feed/domain/entities/comment_entity.dart';
 import 'package:intl/intl.dart';
+import 'package:styled_widget/styled_widget.dart';
 
 class CommentCard extends StatelessWidget {
+  const CommentCard(
+      {required this.comment, required this.isCurrentuser, super.key});
   final CommentEntity comment;
-  const CommentCard({Key? key, required this.comment}) : super(key: key);
+  final bool isCurrentuser;
+
+  void deleteComment(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title:
+                  const Text('Do you want to delete the comment?').fontSize(18),
+              actions: [
+                TextButton(
+                    child: const Text('Cancel').textColor(Colors.red),
+                    onPressed: () => Navigator.of(ctx).pop()),
+                TextButton(
+                    onPressed: () {
+                      sl.get<FirestoreRepositories>().deleteComment(
+                          postId: comment.postId, commentId: comment.commentId);
+                      Navigator.of(ctx).pop();
+                    },
+                    child: const Text('Delete')),
+              ],
+            ));
+  }
+
+  void showPopupMenu(BuildContext context) async {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+
+    final Offset buttonPosition = button.localToGlobal(Offset.zero);
+    final Size buttonSize = button.size;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
+    final double dy = buttonPosition.dy + buttonSize.height;
+    final double dx = buttonPosition.dx;
+
+    final RelativeRect position = RelativeRect.fromLTRB(
+      dx,
+      dy,
+      MediaQuery.of(context).size.width,
+      screenHeight,
+    );
+
+    await showMenu(
+      context: context,
+      position: position,
+      items: [
+        PopupMenuItem(
+          onTap: () => deleteComment(context),
+          child: const Text('Delete'),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +121,8 @@ class CommentCard extends StatelessWidget {
           )
         ],
       ),
-    );
+    ).ripple().gestures(
+          onLongPress: () => isCurrentuser ? showPopupMenu(context) : {},
+        );
   }
 }

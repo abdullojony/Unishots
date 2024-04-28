@@ -39,7 +39,7 @@ class _$UserModelSerializer implements StructuredSerializer<UserModel> {
       'savedPosts',
       serializers.serialize(object.savedPosts,
           specifiedType:
-              const FullType(BuiltList, const [const FullType(PostItem)])),
+              const FullType(BuiltSet, const [const FullType(String)])),
       'followers',
       serializers.serialize(object.followers,
           specifiedType:
@@ -92,9 +92,9 @@ class _$UserModelSerializer implements StructuredSerializer<UserModel> {
           break;
         case 'savedPosts':
           result.savedPosts.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      BuiltList, const [const FullType(PostItem)]))!
-              as BuiltList<Object?>);
+                  specifiedType:
+                      const FullType(BuiltSet, const [const FullType(String)]))!
+              as BuiltSet<Object?>);
           break;
         case 'followers':
           result.followers.replace(serializers.deserialize(value,
@@ -129,7 +129,7 @@ class _$UserModel extends UserModel {
   @override
   final BuiltList<PostItem> posts;
   @override
-  final BuiltList<PostItem> savedPosts;
+  final BuiltSet<String> savedPosts;
   @override
   final BuiltSet<String> followers;
   @override
@@ -244,10 +244,10 @@ class UserModelBuilder implements Builder<UserModel, UserModelBuilder> {
       _$this._posts ??= new ListBuilder<PostItem>();
   set posts(ListBuilder<PostItem>? posts) => _$this._posts = posts;
 
-  ListBuilder<PostItem>? _savedPosts;
-  ListBuilder<PostItem> get savedPosts =>
-      _$this._savedPosts ??= new ListBuilder<PostItem>();
-  set savedPosts(ListBuilder<PostItem>? savedPosts) =>
+  SetBuilder<String>? _savedPosts;
+  SetBuilder<String> get savedPosts =>
+      _$this._savedPosts ??= new SetBuilder<String>();
+  set savedPosts(SetBuilder<String>? savedPosts) =>
       _$this._savedPosts = savedPosts;
 
   SetBuilder<String>? _followers;

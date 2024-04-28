@@ -14,6 +14,7 @@ Stream<QuerySnapshot<Map<String, dynamic>>> chatStream(ChatStreamRef ref) {
       .collection('users')
       .doc(userId)
       .collection('chats')
+      .orderBy('unreadCount', descending: true)
       .snapshots();
 }
 
@@ -31,16 +32,28 @@ Stream<QuerySnapshot<Map<String, dynamic>>> messageStream(
       .snapshots();
 }
 
-/// Notifier that holds the chat that needs to be opened.
-@riverpod
-class ChatNotifier extends _$ChatNotifier {
+@Riverpod(keepAlive: true)
+class OpenChat extends _$OpenChat {
   /// Constructor for default state.
   @override
-  ChatEntity? build() => null;
+  Function(ChatEntity)? build() => null;
 
   /// Function to update the state.
   @override
-  set state(ChatEntity? newState) => super.state = newState;
-  ChatEntity? update(ChatEntity? Function(ChatEntity? state) cb) =>
+  set state(Function(ChatEntity)? newState) => super.state = newState;
+  Function(ChatEntity)? update(
+          Function(ChatEntity)? Function(Function(ChatEntity)? state) cb) =>
       state = cb(state);
+}
+
+@riverpod
+class UnreadMessages extends _$UnreadMessages {
+  /// Constructor for default state.
+  @override
+  int build() => 0;
+
+  /// Function to update the state.
+  @override
+  set state(int newState) => super.state = newState;
+  int update(int Function(int state) cb) => state = cb(state);
 }

@@ -429,6 +429,140 @@ class _FollowingUsersProviderElement extends AutoDisposeFutureProviderElement<
   Set<String> get following => (origin as FollowingUsersProvider).following;
 }
 
+String _$savedPostsHash() => r'9ec552248bc547da9aacaaf556b0a3e5a7ce87dd';
+
+/// See also [savedPosts].
+@ProviderFor(savedPosts)
+const savedPostsProvider = SavedPostsFamily();
+
+/// See also [savedPosts].
+class SavedPostsFamily
+    extends Family<AsyncValue<QuerySnapshot<Map<String, dynamic>>?>> {
+  /// See also [savedPosts].
+  const SavedPostsFamily();
+
+  /// See also [savedPosts].
+  SavedPostsProvider call(
+    BuiltSet<String> savedSet,
+  ) {
+    return SavedPostsProvider(
+      savedSet,
+    );
+  }
+
+  @override
+  SavedPostsProvider getProviderOverride(
+    covariant SavedPostsProvider provider,
+  ) {
+    return call(
+      provider.savedSet,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'savedPostsProvider';
+}
+
+/// See also [savedPosts].
+class SavedPostsProvider
+    extends AutoDisposeFutureProvider<QuerySnapshot<Map<String, dynamic>>?> {
+  /// See also [savedPosts].
+  SavedPostsProvider(
+    BuiltSet<String> savedSet,
+  ) : this._internal(
+          (ref) => savedPosts(
+            ref as SavedPostsRef,
+            savedSet,
+          ),
+          from: savedPostsProvider,
+          name: r'savedPostsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$savedPostsHash,
+          dependencies: SavedPostsFamily._dependencies,
+          allTransitiveDependencies:
+              SavedPostsFamily._allTransitiveDependencies,
+          savedSet: savedSet,
+        );
+
+  SavedPostsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.savedSet,
+  }) : super.internal();
+
+  final BuiltSet<String> savedSet;
+
+  @override
+  Override overrideWith(
+    FutureOr<QuerySnapshot<Map<String, dynamic>>?> Function(
+            SavedPostsRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SavedPostsProvider._internal(
+        (ref) => create(ref as SavedPostsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        savedSet: savedSet,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<QuerySnapshot<Map<String, dynamic>>?>
+      createElement() {
+    return _SavedPostsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SavedPostsProvider && other.savedSet == savedSet;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, savedSet.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin SavedPostsRef
+    on AutoDisposeFutureProviderRef<QuerySnapshot<Map<String, dynamic>>?> {
+  /// The parameter `savedSet` of this provider.
+  BuiltSet<String> get savedSet;
+}
+
+class _SavedPostsProviderElement extends AutoDisposeFutureProviderElement<
+    QuerySnapshot<Map<String, dynamic>>?> with SavedPostsRef {
+  _SavedPostsProviderElement(super.provider);
+
+  @override
+  BuiltSet<String> get savedSet => (origin as SavedPostsProvider).savedSet;
+}
+
 String _$singlePostStreamHash() => r'84b293368653334bccbc801615a5cca7e270214b';
 
 /// See also [singlePostStream].

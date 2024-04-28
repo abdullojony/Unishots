@@ -6,7 +6,7 @@ part of 'chat_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatStreamHash() => r'00e3700ce7d0f3893be14491bfed49c4ebcdb98c';
+String _$chatStreamHash() => r'b959115bfea435e1776ae11e9ac573f80deae2e5';
 
 /// See also [chatStream].
 @ProviderFor(chatStream)
@@ -194,22 +194,36 @@ class _MessageStreamProviderElement extends AutoDisposeStreamProviderElement<
   String get chatId => (origin as MessageStreamProvider).chatId;
 }
 
-String _$chatNotifierHash() => r'dc3a56149a7a0a2bcf4198bb68167b685bd8fb0c';
+String _$openChatHash() => r'484dd1963d72bcf9ad117fc87bd6327ca4a48bec';
 
-/// Notifier that holds the chat that needs to be opened.
-///
-/// Copied from [ChatNotifier].
-@ProviderFor(ChatNotifier)
-final chatNotifierProvider =
-    AutoDisposeNotifierProvider<ChatNotifier, ChatEntity?>.internal(
-  ChatNotifier.new,
-  name: r'chatNotifierProvider',
+/// See also [OpenChat].
+@ProviderFor(OpenChat)
+final openChatProvider =
+    NotifierProvider<OpenChat, Function(ChatEntity)?>.internal(
+  OpenChat.new,
+  name: r'openChatProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$chatNotifierHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$openChatHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ChatNotifier = AutoDisposeNotifier<ChatEntity?>;
+typedef _$OpenChat = Notifier<Function(ChatEntity)?>;
+String _$unreadMessagesHash() => r'91dca04c822822a9728af4febbf3cd799f008a96';
+
+/// See also [UnreadMessages].
+@ProviderFor(UnreadMessages)
+final unreadMessagesProvider =
+    AutoDisposeNotifierProvider<UnreadMessages, int>.internal(
+  UnreadMessages.new,
+  name: r'unreadMessagesProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$unreadMessagesHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$UnreadMessages = AutoDisposeNotifier<int>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

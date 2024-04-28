@@ -1,3 +1,4 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -37,6 +38,19 @@ Future<QuerySnapshot<Map<String, dynamic>>?> followingUsers(
       .get<FirebaseFirestore>()
       .collection('users')
       .where('userId', whereIn: following)
+      .get();
+}
+
+@riverpod
+Future<QuerySnapshot<Map<String, dynamic>>?> savedPosts(
+    SavedPostsRef ref, BuiltSet<String> savedSet) {
+  if (savedSet.isEmpty) {
+    return Future(() => null);
+  }
+  return sl
+      .get<FirebaseFirestore>()
+      .collection('posts')
+      .where('postId', whereIn: savedSet)
       .get();
 }
 

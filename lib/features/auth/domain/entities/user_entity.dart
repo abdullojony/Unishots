@@ -11,7 +11,7 @@ abstract class UserEntity {
   String get profileImage;
   String get bio;
   BuiltList<PostItem> get posts;
-  BuiltList<PostItem> get savedPosts;
+  BuiltSet<String> get savedPosts;
   BuiltSet<String> get followers;
   BuiltSet<String> get following;
 }

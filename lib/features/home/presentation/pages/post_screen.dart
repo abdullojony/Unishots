@@ -7,6 +7,7 @@ import 'package:instagram_clone/core/repositories/firestore_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/core/widgets/loading_wrapper.dart';
 import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
+import 'package:instagram_clone/features/search/data/riverpod/search_provider.dart';
 import 'package:styled_widget/styled_widget.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -33,7 +34,10 @@ class PostScreen extends HookConsumerWidget {
               profileImageUrl: userData.profileImage,
               postImage: postImage,
               description: descriptionController.text)
-          .then((value) => Navigator.of(context).pop(),
+          .then((value) {
+        ref.invalidate(postProvider);
+        Navigator.of(context).pop();
+      },
               onError: (error) => sl
                   .get<CoreRepositories>()
                   .showSnackBar(context, message: error.toString()));

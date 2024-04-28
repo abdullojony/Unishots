@@ -2,6 +2,7 @@ abstract class ChatEntity {
   String get chatId;
   String get username;
   String get profileImageUrl;
+  int get unreadCount;
 }
 
 abstract class MessageEntity {

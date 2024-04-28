@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/core/repositories/core_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/core/widgets/loading_wrapper.dart';
-import 'package:instagram_clone/features/auth/data/repositories/auth_repositories.dart';
+import 'package:instagram_clone/features/auth/domain/repositories/auth_repositories.dart';
 import 'package:instagram_clone/features/auth/presentation/widgets/login_option.dart';
 import 'package:instagram_clone/features/auth/presentation/widgets/profile_photo.dart';
 import 'package:instagram_clone/features/auth/presentation/widgets/signup_form.dart';
@@ -25,14 +25,15 @@ class SignupScreen extends HookConsumerWidget {
     final snapshot = useFuture(requestPending.value);
 
     void selectImage() async {
-      sl
-          .get<CoreRepositories>()
-          .pickImage(source: ImageSource.gallery)
-          .then((image) {
+      sl.get<CoreRepositories>().pickImage(source: ImageSource.gallery).then(
+          (image) {
         if (image != null) {
           profileImage.value = image;
         }
-      }).catchError((error) => null);
+      },
+          onError: (e) => sl
+              .get<CoreRepositories>()
+              .showSnackBar(context, message: e.toString()));
     }
 
     Future<void> signup(

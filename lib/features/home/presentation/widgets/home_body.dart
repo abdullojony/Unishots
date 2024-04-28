@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/features/chat/presentation/pages/chat_screen.dart';
 import 'package:instagram_clone/features/feed/presentation/pages/feed_screen.dart';
-import 'package:instagram_clone/features/home/presentation/pages/home_screen.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/offstage_navigator.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
 import 'package:instagram_clone/features/profile/presentation/pages/profile_screen.dart';
 import 'package:instagram_clone/features/search/presentation/pages/search_screen.dart';
 
 class HomeBody extends StatelessWidget {
-  const HomeBody(this.navKeys, {super.key});
+  const HomeBody(
+      {required this.navKeys, required this.currentUserId, super.key});
   final Map<TabItem, GlobalKey<NavigatorState>> navKeys;
+  final String currentUserId;
 
   @override
   Widget build(BuildContext context) {
-    final currentUserId = context
-        .dependOnInheritedWidgetOfExactType<HomeResources>()!
-        .currentUser
-        .userId;
-
     return Stack(children: <Widget>[
       OffstageNavigator(
         tabItem: TabItem.feed,
@@ -36,7 +32,7 @@ class HomeBody extends StatelessWidget {
       OffstageNavigator(
         tabItem: TabItem.profile,
         navKey: navKeys[TabItem.profile],
-        screen: ProfileScreen(userId: currentUserId),
+        screen: ProfileScreen(userId: currentUserId, isCurrentUser: true),
       ),
     ]);
   }

@@ -29,6 +29,9 @@ class _$ChatModelSerializer implements StructuredSerializer<ChatModel> {
       'profileImageUrl',
       serializers.serialize(object.profileImageUrl,
           specifiedType: const FullType(String)),
+      'unreadCount',
+      serializers.serialize(object.unreadCount,
+          specifiedType: const FullType(int)),
     ];
 
     return result;
@@ -56,6 +59,10 @@ class _$ChatModelSerializer implements StructuredSerializer<ChatModel> {
         case 'profileImageUrl':
           result.profileImageUrl = serializers.deserialize(value,
               specifiedType: const FullType(String))! as String;
+          break;
+        case 'unreadCount':
+          result.unreadCount = serializers.deserialize(value,
+              specifiedType: const FullType(int))! as int;
           break;
       }
     }
@@ -154,6 +161,8 @@ class _$ChatModel extends ChatModel {
   final String username;
   @override
   final String profileImageUrl;
+  @override
+  final int unreadCount;
 
   factory _$ChatModel([void Function(ChatModelBuilder)? updates]) =>
       (new ChatModelBuilder()..update(updates))._build();
@@ -161,12 +170,15 @@ class _$ChatModel extends ChatModel {
   _$ChatModel._(
       {required this.chatId,
       required this.username,
-      required this.profileImageUrl})
+      required this.profileImageUrl,
+      required this.unreadCount})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(chatId, r'ChatModel', 'chatId');
     BuiltValueNullFieldError.checkNotNull(username, r'ChatModel', 'username');
     BuiltValueNullFieldError.checkNotNull(
         profileImageUrl, r'ChatModel', 'profileImageUrl');
+    BuiltValueNullFieldError.checkNotNull(
+        unreadCount, r'ChatModel', 'unreadCount');
   }
 
   @override
@@ -182,7 +194,8 @@ class _$ChatModel extends ChatModel {
     return other is ChatModel &&
         chatId == other.chatId &&
         username == other.username &&
-        profileImageUrl == other.profileImageUrl;
+        profileImageUrl == other.profileImageUrl &&
+        unreadCount == other.unreadCount;
   }
 
   @override
@@ -191,6 +204,7 @@ class _$ChatModel extends ChatModel {
     _$hash = $jc(_$hash, chatId.hashCode);
     _$hash = $jc(_$hash, username.hashCode);
     _$hash = $jc(_$hash, profileImageUrl.hashCode);
+    _$hash = $jc(_$hash, unreadCount.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -200,7 +214,8 @@ class _$ChatModel extends ChatModel {
     return (newBuiltValueToStringHelper(r'ChatModel')
           ..add('chatId', chatId)
           ..add('username', username)
-          ..add('profileImageUrl', profileImageUrl))
+          ..add('profileImageUrl', profileImageUrl)
+          ..add('unreadCount', unreadCount))
         .toString();
   }
 }
@@ -221,6 +236,10 @@ class ChatModelBuilder implements Builder<ChatModel, ChatModelBuilder> {
   set profileImageUrl(String? profileImageUrl) =>
       _$this._profileImageUrl = profileImageUrl;
 
+  int? _unreadCount;
+  int? get unreadCount => _$this._unreadCount;
+  set unreadCount(int? unreadCount) => _$this._unreadCount = unreadCount;
+
   ChatModelBuilder();
 
   ChatModelBuilder get _$this {
@@ -229,6 +248,7 @@ class ChatModelBuilder implements Builder<ChatModel, ChatModelBuilder> {
       _chatId = $v.chatId;
       _username = $v.username;
       _profileImageUrl = $v.profileImageUrl;
+      _unreadCount = $v.unreadCount;
       _$v = null;
     }
     return this;
@@ -256,7 +276,9 @@ class ChatModelBuilder implements Builder<ChatModel, ChatModelBuilder> {
             username: BuiltValueNullFieldError.checkNotNull(
                 username, r'ChatModel', 'username'),
             profileImageUrl: BuiltValueNullFieldError.checkNotNull(
-                profileImageUrl, r'ChatModel', 'profileImageUrl'));
+                profileImageUrl, r'ChatModel', 'profileImageUrl'),
+            unreadCount: BuiltValueNullFieldError.checkNotNull(
+                unreadCount, r'ChatModel', 'unreadCount'));
     replace(_$result);
     return _$result;
   }

@@ -24,14 +24,15 @@ class EditProfilePage extends HookConsumerWidget {
     final snapshot = useFuture(requestPending.value);
 
     void selectImage() async {
-      sl
-          .get<CoreRepositories>()
-          .pickImage(source: ImageSource.gallery)
-          .then((image) {
+      sl.get<CoreRepositories>().pickImage(source: ImageSource.gallery).then(
+          (image) {
         if (image != null) {
           profileImage.value = image;
         }
-      }).catchError((error) => null);
+      },
+          onError: (e) => sl
+              .get<CoreRepositories>()
+              .showSnackBar(context, message: e.toString()));
     }
 
     Future<void> submit(String bio) async {

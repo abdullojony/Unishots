@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:instagram_clone/core/repositories/core_repositories.dart';
 import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/core/widgets/loading_wrapper.dart';
-import 'package:instagram_clone/features/auth/data/repositories/auth_repositories.dart';
+import 'package:instagram_clone/features/auth/domain/repositories/auth_repositories.dart';
 import 'package:instagram_clone/features/auth/presentation/widgets/login_form.dart';
 import 'package:instagram_clone/features/auth/presentation/widgets/signup_option.dart';
 import 'package:instagram_clone/core/widgets/unishots_logo.dart';

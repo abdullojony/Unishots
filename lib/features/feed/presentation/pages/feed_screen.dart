@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:instagram_clone/core/repositories/core_repositories.dart';
+import 'package:instagram_clone/core/service_locator/injection_container.dart';
 import 'package:instagram_clone/core/widgets/empty_page.dart';
 import 'package:instagram_clone/core/widgets/failed_widget.dart';
 import 'package:instagram_clone/core/widgets/loading_widget.dart';
@@ -28,7 +30,9 @@ class FeedScreen extends ConsumerWidget {
               size: 28,
               color: Theme.of(context).primaryColorDark,
             ),
-            onPressed: () {},
+            onPressed: () => sl
+                .get<CoreRepositories>()
+                .showSnackBar(context, message: 'Not implemented yet.'),
           ),
         ],
       ),

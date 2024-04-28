@@ -8,7 +8,7 @@ import 'package:instagram_clone/core/repositories_impl/core_repositories_impl.da
 import 'package:instagram_clone/core/repositories/storage_repositories.dart';
 import 'package:instagram_clone/core/repositories_impl/firestore_repositories_impl.dart';
 import 'package:instagram_clone/core/repositories_impl/storage_repositories_impl.dart';
-import 'package:instagram_clone/features/auth/data/repositories/auth_repositories.dart';
+import 'package:instagram_clone/features/auth/domain/repositories/auth_repositories.dart';
 import 'package:instagram_clone/features/auth/data/repositories/auth_repositories_impl.dart';
 
 final sl = GetIt.instance;

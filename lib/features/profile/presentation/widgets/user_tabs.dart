@@ -1,16 +1,22 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:instagram_clone/core/widgets/failed_widget.dart';
+import 'package:instagram_clone/core/widgets/loading_widget.dart';
 import 'package:instagram_clone/features/auth/domain/entities/user_entity.dart';
+import 'package:instagram_clone/features/profile/data/riverpod/profile_provider.dart';
 import 'package:instagram_clone/features/profile/presentation/widgets/post_grid.dart';
+import 'package:instagram_clone/features/profile/presentation/widgets/saved_posts_grid.dart';
 
 class UserTabs extends ConsumerWidget {
-  const UserTabs(this.posts, this.savedPosts, {super.key});
+  const UserTabs(this.posts, this.savedSet, {super.key});
   final BuiltList<PostItem> posts;
-  final BuiltList<PostItem> savedPosts;
+  final BuiltSet<String> savedSet;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final savedPosts = ref.watch(savedPostsProvider(savedSet));
+
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
@@ -38,10 +44,17 @@ class UserTabs extends ConsumerWidget {
           body: TabBarView(
             children: [
               // User posts tab
-              PostGrid(posts, true),
+              SingleChildScrollView(child: PostGrid(posts)),
 
               // Saved posts tab
-              PostGrid(savedPosts, false),
+              savedPosts.when(
+                data: (posts) => posts == null || posts.docs.isEmpty
+                    ? const Center(child: Text('No saved posts.'))
+                    : SavedPostsGrid(posts.docs),
+                loading: () => const LoadingWidget(),
+                error: (error, stackTrace) =>
+                    FailedWidget(error: error.toString()),
+              )
             ],
           )),
     );

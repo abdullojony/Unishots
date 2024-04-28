@@ -17,6 +17,8 @@ abstract class ChatModel
   String get username;
   @override
   String get profileImageUrl;
+  @override
+  int get unreadCount;
 
   ChatModel._();
 

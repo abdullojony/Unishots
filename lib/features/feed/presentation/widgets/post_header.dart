@@ -8,6 +8,7 @@ import 'package:instagram_clone/features/feed/presentation/pages/edit_post_page.
 import 'package:instagram_clone/features/home/data/riverpod/home_provider.dart';
 import 'package:instagram_clone/features/home/presentation/widgets/tab_item.dart';
 import 'package:instagram_clone/features/profile/presentation/pages/profile_screen.dart';
+import 'package:instagram_clone/features/search/data/riverpod/search_provider.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class PostHeader extends ConsumerWidget {
@@ -26,21 +27,50 @@ class PostHeader extends ConsumerWidget {
               .read(currentTabNotifierProvider.notifier)
               .update((state) => TabItem.profile)
           : Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => ProfileScreen(userId: post.userId)));
+              builder: (_) => ProfileScreen(
+                  userId: post.userId,
+                  isCurrentUser: post.userId == currentUserId)));
     }
 
     void savePost(bool saved) {
       sl
           .get<FirestoreRepositories>()
-          .savePost(
-              postId: post.postId,
-              userId: currentUserId,
-              postUrl: post.postUrl,
-              isSaved: saved)
+          .savePost(postId: post.postId, userId: currentUserId, isSaved: saved)
           .then((value) => !saved
               ? sl.get<CoreRepositories>().showSnackBar(context,
                   message: 'Post saved', duration: const Duration(seconds: 1))
               : {});
+    }
+
+    void deletePost() {
+      showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+                title:
+                    const Text('Do you want to delete the post?').fontSize(18),
+                actions: [
+                  TextButton(
+                      child: const Text('Cancel').textColor(Colors.red),
+                      onPressed: () => Navigator.of(ctx).pop()),
+                  TextButton(
+                      onPressed: () {
+                        sl
+                            .get<FirestoreRepositories>()
+                            .deletePost(
+                                postId: post.postId,
+                                postUrl: post.postUrl,
+                                userId: currentUserId)
+                            .then((value) {
+                          ref.invalidate(postProvider);
+                          sl.get<CoreRepositories>().showSnackBar(context,
+                              message: 'Post deleted',
+                              duration: const Duration(seconds: 1));
+                        });
+                        Navigator.of(ctx).pop();
+                      },
+                      child: const Text('Yes')),
+                ],
+              ));
     }
 
     return Container(
@@ -69,6 +99,10 @@ class PostHeader extends ConsumerWidget {
               icon: const Icon(Icons.more_vert),
               itemBuilder: (context) => isCurrentUser
                   ? [
+                      PopupMenuItem<String>(
+                        onTap: deletePost,
+                        child: const Text('Delete'),
+                      ),
                       PopupMenuItem<String>(
                         child: const Text('Edit'),
                         onTap: () => Navigator.of(context).push(

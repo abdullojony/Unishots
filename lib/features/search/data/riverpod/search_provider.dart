@@ -6,5 +6,18 @@ part 'search_provider.g.dart';
 
 @riverpod
 Future<QuerySnapshot<Map<String, dynamic>>> post(PostRef ref) {
-  return sl.get<FirebaseFirestore>().collection('posts').get();
+  return sl
+      .get<FirebaseFirestore>()
+      .collection('posts')
+      .orderBy('publishedDate', descending: true)
+      .get();
+}
+
+@riverpod
+Future<QuerySnapshot> searchUsers(SearchUsersRef ref, String searchText) {
+  return sl
+      .get<FirebaseFirestore>()
+      .collection('users')
+      .where('username', isGreaterThanOrEqualTo: searchText)
+      .get();
 }

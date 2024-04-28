@@ -28,17 +28,18 @@ class AndroidDialog extends StatelessWidget {
                         .fontSize(18)
                         .textColor(Theme.of(context).colorScheme.primary))
                 .gestures(onTap: () {
-              sl
-                  .get<CoreRepositories>()
-                  .pickImage(source: ImageSource.camera)
-                  .then((value) {
+              sl.get<CoreRepositories>().pickImage(source: ImageSource.camera).then(
+                  (value) {
                 if (value != null) {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (_) => PostScreen(postImage: value)));
                 } else {
                   Navigator.of(context).pop();
                 }
-              });
+              },
+                  onError: (e) => sl
+                      .get<CoreRepositories>()
+                      .showSnackBar(context, message: e.toString()));
             }),
             const Divider(),
             Container(
@@ -58,7 +59,10 @@ class AndroidDialog extends StatelessWidget {
                 } else {
                   Navigator.of(context).pop();
                 }
-              });
+              },
+                      onError: (e) => sl
+                          .get<CoreRepositories>()
+                          .showSnackBar(context, message: e.toString()));
             }),
           ],
         )

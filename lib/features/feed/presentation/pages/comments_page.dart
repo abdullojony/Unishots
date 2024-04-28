@@ -38,7 +38,9 @@ class CommentsPage extends HookWidget {
           ? ListView.builder(
               itemCount: comments.length,
               itemBuilder: (ctx, index) => CommentCard(
-                  comment: CommentModel.fromDocument(comments[index])))
+                  comment: CommentModel.fromDocument(comments[index]),
+                  isCurrentuser:
+                      currentUser.userId == comments[index]['userId']))
           : const Center(child: Text('No comments yet.')),
       bottomNavigationBar: SafeArea(
         child: Container(
