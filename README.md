@@ -1,3 +1,3 @@
 # Unishots
 
-Multiplatform social media app where you can share photos, like, comment and chat with your friends all in real time. 
+Multiplatform social media application built in Flutter with Clean Code.
